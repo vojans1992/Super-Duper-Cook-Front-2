@@ -1,23 +1,49 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './App.css';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-function App() {
+const Menu = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="menu">
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/">Contact us</Link>
+        </li>
+        <li>
+          <Link to="/ingredients">Ingredients</Link>
+        </li>
+        {/* Dodajte Link oko ikonice za prelazak na stranicu za login */}
+        <Link to="/login">
+          <AccountCircleIcon className="menu-icon" />
+        </Link>
+      </ul>
+    </div>
+  );
+};
+
+function App()  {
+  return (
+    <div>
+      <div className="header">
+        <Menu />
+        <div className="title">
+          The Taste That<br />
+          Make You Feel<br />
+          Awesome
+        </div>
+      </div>
+      <div className='text'>
+        <p>Welcome to our oasis of flavor! Indulge in irresistible dishes<br/> that will take you on a culinary journey like no other.<br/>
+          Experience the harmony of taste and aroma in every bite.<br/>
+          Step into our magical culinary adventure</p>
+      </div>
+      <div className="button-container">
+        <button className="menu-button">View Our Menu</button>
+      </div>
     </div>
   );
 }

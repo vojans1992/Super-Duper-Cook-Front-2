@@ -1,0 +1,29 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url(./Slike/Slika1.jpg);
+  background-size: cover;
+}
+
+.custom-textfield {
+  width: 300px;
+  height: 60px;
+  background-color: white; /* Bela boja pozadine samo za TextField */
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 18px;
+  color: white; /* Bela boja slova u labelama */
+}
+
+h1 {
+  font-size: 60px;
+  color: orangered;
+}
+.white-helper-text {
+  color: orangered;
+  font-size: 19px;
+  font-weight: bold;
+}

@@ -1,38 +1,107 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+body {
+    /* Ostali stilovi za body */
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-image: url(./Slike/Slika2.jpg);
+    background-size: cover;
+    -moz-osx-font-smoothing: grayscale;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .menu {
+    display: flex;
+    justify-content: center; /* Centriranje menija na horizontali */
+    background-color: transparent; /* Boja pozadine menija - ista kao pozadina sajta */
+    border-radius: 25px; /* Dodajemo zakrivljene ivice menija */
+    width: 50%; /* Postavljamo širinu menija na 50% ekrana */
+    margin: 0 auto; /* Centriramo meni na horizontali */
+    padding: 10px 0; /* Rastojanje između linkova i linije ispod menija */
+    border: 2px solid orangered; /* Ivica menija u beloj boji */
   }
-}
+  
+  .menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .menu li {
+    margin: 0 20px; /* Rastojanje između linkova u meniju */
+  }
+  
+  .menu a {
+    text-decoration: none;
+    font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
+    color: orangered; /* Boja teksta linkova */
+    font-size: 25px;
+  }
+  
+  .menu a:hover {
+    color: white; /* Boja teksta linkova prilikom prelaska mišem preko njih */
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-bottom: 20%; /* Rastojanje od dna sajta */
+  }
+  
+  .title {
+    font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
+    font-size: 70px;
+    font-weight: bold;
+    color: orangered;
+    position: absolute;
+    bottom: 0;
+    left: 23%;
+    transform: translateX(-50%);
+  }
+  .menu-button {
+    border-radius: 25px;
+    font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
+    background-color: transparent;
+    color: orangered;
+    padding: 10px 20px;
+    font-size: 30px;
+    border: 2px solid orangered;
+    cursor: pointer;
+    position: absolute;
+    left: 10%; /* Pomeranje dugmeta u levo */
+    top: 70%; /* Pomeranje dugmeta prema vrhu */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .menu-button:hover{
+    background-color: white;
+    transition: 0.5s ease;
+  }
+  .text{
+    font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
+  font-size: 20px;
+  font-weight: bold;
+  color: orangered;
+  position: absolute;
+  left: 25%;
+  bottom: 35%;
+  transform: translateX(-50%);
+  }
+  .menu-icon {
+    position: relative;
+    left: 70%; /* Pomeranje ikonice u desno */
+    font-size: 40px !important; /* Promena veličine ikonice sa !important */
+    color: orangered;
+  }

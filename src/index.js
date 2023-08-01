@@ -6,6 +6,8 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import IngredientList from './IngredientList';
 import Login from './Login'; // Importujemo komponentu za stranicu za login
+import ShowRecipes from './Recipes/ShowRecipes'
+import NewRecipe from './Recipes/NewRecipe'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,26 @@ const router = createBrowserRouter([
         return [];
       }
     }
+  },
+  {
+    path: "recipes",
+    element: <ShowRecipes />,
+    loader: async () => {
+      return fetch('http://localhost:8080/api/v1/recipes');
+    },
+  },
+  {
+    path: "recipes/new_recipe",
+    element: <NewRecipe />,
+    loader: async () => {
+      const ingredients_a = await fetch('http://localhost:8080/api/v1/ingredients');
+      const ingredients = await ingredients_a.json();
+
+      const authors_a = await fetch('http://localhost:8080/api/v1/cook');
+      const authors = await authors_a.json();
+
+      return [ingredients, authors];
+    },
   },
   {
     path: '/login', // Putanja za stranicu za login

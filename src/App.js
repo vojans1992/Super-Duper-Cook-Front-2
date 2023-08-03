@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import './App.css';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Menu = () => {
   return (
-    <div className="menu">
+    <div className="menu">      
       <ul>
         <li>
           <Link to="/">Home</Link>
@@ -25,12 +26,13 @@ const Menu = () => {
         </Link>
       </ul>
     </div>
+    
   );
 };
 
 function App()  {
   return (
-    <div>
+    <div className="home-background"> {/* Primena klase za pozadinu */}
       <div className="header">
         <Menu />
         <div className="title">

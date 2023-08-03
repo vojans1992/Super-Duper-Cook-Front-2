@@ -2,7 +2,7 @@ import { Grid, Button, FormControl, TextField } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router"
-
+import './Recipe.css'; 
 const ShowRecipes = () => {
     const recipes = useLoaderData();
     const navigate = useNavigate();
@@ -22,7 +22,7 @@ const ShowRecipes = () => {
     };
 
     return <>
-        <Container>
+           <Container className="show-recipes-container">
             <Box
                 sx={{
                     display: "flex",

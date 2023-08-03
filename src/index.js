@@ -8,6 +8,7 @@ import IngredientList from './IngredientList';
 import Login from './Login'; // Importujemo komponentu za stranicu za login
 import ShowRecipes from './Recipes/ShowRecipes'
 import NewRecipe from './Recipes/NewRecipe'
+import ShowUsers from './User/ShowUsers';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
     path: '/login', // Putanja za stranicu za login
     element: <Login />, // Koristimo komponentu Login za ovu rutu
   },
+  {
+    path: "users",
+    element: <ShowUsers/>,
+    loader: async () => {
+      return fetch("http://localhost:8080/api/v1/users");
+    }
+  }
+
 ]);
 
 ReactDOM.render(

@@ -19,6 +19,9 @@ const Menu = () => {
         <li>
           <Link to="/recipes">Recipes</Link>
         </li>
+        <li>
+          <Link to="/users">User</Link>
+        </li>
         {/* Dodajte Link oko ikonice za prelazak na stranicu za login */}
         <Link to="/login">
           <AccountCircleIcon className="menu-icon" />

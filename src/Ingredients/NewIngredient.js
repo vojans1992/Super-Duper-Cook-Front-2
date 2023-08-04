@@ -1,7 +1,8 @@
-import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText } from "@mui/material";
+import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText, IconButton } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Menu from '../Menu';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 
 const InputField = ({
@@ -30,7 +31,7 @@ const InputField = ({
 const NewIngredient = () => {
 
     const loader_data = useLoaderData();
-    const [allergens, setAllergens] = useState(loader_data[0]);    
+    const [allergens, setAllergens] = useState(loader_data[0]);
     const [selectedAllergens, setSelectedAllergens] = useState([]);
     const [selectedAllergen, setSelectedAllergen] = useState(null);
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ const NewIngredient = () => {
         allergens: "",
         global: "",
     });
-    
+
     const validateDecimal = (value, fieldName) => {
         const isValid = /^\d+(\.\d{1,2})?$/.test(value);
         return isValid
@@ -142,7 +143,7 @@ const NewIngredient = () => {
         }
     };
 
-    
+
     const save = async () => {
 
         const { name, munit, calories, chydrate, sugar, fat, saturatedFat, protein, allergens } = formFields;
@@ -199,9 +200,13 @@ const NewIngredient = () => {
     };
 
     return <div className="ingredient-container">
-        <Menu/>
-
         <Container maxWidth="sm" sx={{ paddingTop: "15px" }}>
+
+            <Box sx={{ display: "flex", alignItems: "left" }}>
+                <IconButton onClick={() => { navigate('/ingredients') }}>
+                    <ArrowBackRoundedIcon />
+                </IconButton>
+            </Box>
             <Box
                 component="form"
                 sx={{
@@ -214,6 +219,8 @@ const NewIngredient = () => {
                 }}
                 noValidate
                 autoComplete="off">
+
+
                 <Typography variant="h6">Please enter the values of the new ingredient:</Typography>
 
                 <InputField
@@ -336,7 +343,7 @@ const NewIngredient = () => {
                 <FormHelperText error={!!formErrors.global}>{formErrors.global}</FormHelperText>
             </Box>
         </Container>
-        
+
     </div>
 }
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLoaderData, useFetcher, useNavigate } from "react-router-dom";
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem } from "@mui/material";
 import { Container, Box, Button, TextField, FormControl, Stack } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Home } from "@mui/icons-material";
 import Pagination from '@mui/material/Pagination';
 import './Ingredient.css';
 
@@ -32,14 +32,17 @@ const ShowIngredients = () => {
     const currentIngredients = filteredIngredients.slice(startIndex, endIndex);
 
 
-    return <div className="ingredient-container">
-        <Menu/>
+    return <div className="ingredient-container">     
         <Container>
             <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-
-                <FormControl sx={{ width: "30%" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <IconButton onClick={() => { navigation('/') }}>
+                            <Home />
+                        </IconButton>
+                <FormControl sx={{ width: "100%" }}>
                     <TextField placeholder="Search..." value={q} onChange={e => setQ(e.target.value)} sx={{ flexGrow: 1 }} />
                 </FormControl>
+                </Box>
 
                 <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button>
             </Box>

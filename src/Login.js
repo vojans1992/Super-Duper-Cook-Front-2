@@ -2,10 +2,15 @@ import React from 'react';
 import './Login.css'; // Ako imate poseban CSS fajl za stilizaciju Login komponente, uvezite ga ovde
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Link } from "react-router-dom";
+import Menu from './Menu';
 
 const Login = () => {
   return (
+      
     <div className="login-container">
+        <Menu />
       <h1>Login Page</h1>
       <Box
         sx={{

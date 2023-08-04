@@ -2,3 +2,9 @@ body{
     background-image: none;
     background-color: white;
   }
+  .menu{
+    margin-bottom: 50px;
+  }
+  .menu a:hover {
+    color: black; /* Boja teksta linkova prilikom prelaska mišem preko njih */
+  }

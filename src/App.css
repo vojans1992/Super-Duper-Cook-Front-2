@@ -38,6 +38,7 @@
     margin: 0 auto; /* Centriramo meni na horizontali */
     padding: 10px 0; /* Rastojanje između linkova i linije ispod menija */
     border: 2px solid orangered; /* Ivica menija u beloj boji */
+    position: absolute;
   }
   
   .menu ul {
@@ -76,7 +77,7 @@
     font-weight: bold;
     color: orangered;
     position: absolute;
-    bottom: 0;
+    top: 250px;
     left: 23%;
     transform: translateX(-50%);
   }
@@ -103,15 +104,16 @@
     background-color: white;
     transition: 0.5s ease;
   }
-  .text{
-    font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
-  font-size: 20px;
-  font-weight: bold;
-  color: orangered;
-  position: absolute;
-  left: 25%;
-  bottom: 35%;
-  transform: translateX(-50%);
+  .text {
+    /* Ostali stilovi za text... */
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    color: orangered;
+    position: absolute;
+    left: 25%;
+    bottom: 30%;
+    transform: translateX(-50%);
   }
   .menu-icon {
     position: relative;

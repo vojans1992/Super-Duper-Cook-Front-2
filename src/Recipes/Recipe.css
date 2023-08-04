@@ -1,4 +1,15 @@
-body, .show-recipes-container {
+.menu {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  z-index: 1; /* z-index kako bi meni bio iznad ostalih elemenata */
+}
+.show-recipes-container {
   background-image: none;
   background-color: white;
+  padding-top: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

@@ -2,10 +2,17 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* Postavite justify-content na flex-start */
   align-items: center;
   background-image: url(./Slike/Slika1.jpg);
   background-size: cover;
+}
+
+.menu {
+  margin-top: 0; /* Postavite margin-top na 0 da bude pri vrhu stranice */
+  /* Ostali stilovi za komponentu Menu... */
+  position: relative;
+  display: flex;
 }
 
 .custom-textfield {
@@ -21,9 +28,16 @@
 h1 {
   font-size: 60px;
   color: orangered;
+  margin-top: 100px;
 }
+
 .white-helper-text {
   color: orangered;
   font-size: 19px;
   font-weight: bold;
 }
+
+
+
+
+

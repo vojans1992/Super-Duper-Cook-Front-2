@@ -6,6 +6,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import Pagination from '@mui/material/Pagination';
 import './Ingredient.css';
 
+
 const ShowIngredients = () => {
 
     const ingredients = useLoaderData();
@@ -32,6 +33,7 @@ const ShowIngredients = () => {
 
 
     return <div className="ingredient-container">
+        <Menu/>
         <Container>
             <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
 

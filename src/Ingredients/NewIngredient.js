@@ -1,6 +1,7 @@
 import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import Menu from '../Menu';
 
 
 const InputField = ({
@@ -198,6 +199,7 @@ const NewIngredient = () => {
     };
 
     return <div className="ingredient-container">
+        <Menu/>
 
         <Container maxWidth="sm" sx={{ paddingTop: "15px" }}>
             <Box

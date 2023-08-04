@@ -2,6 +2,7 @@ import { Option } from "@mui/base";
 import { Box, Container, TextField, FormHelperText, Button, Autocomplete, Stack, FormControl, Chip, Typography, MenuItem, InputLabel, Select, Grid } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
+import Menu from '../Menu';
 
 const NewRecipe = () => {
 
@@ -78,6 +79,7 @@ const NewRecipe = () => {
     };
 
     return <>
+    <Menu/>
         <Container maxWidth="md" sx={{ paddingTop: "15px" }}>
             <form>
                 <Grid container spacing={2}>

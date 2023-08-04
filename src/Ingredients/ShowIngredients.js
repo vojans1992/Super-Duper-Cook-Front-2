@@ -1,87 +1,106 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLoaderData, useFetcher, useNavigate } from "react-router-dom";
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem } from "@mui/material";
 import { Container, Box, Button, TextField, FormControl, Stack } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import Pagination from '@mui/material/Pagination';
+import './Ingredient.css';
 
 const ShowIngredients = () => {
 
     const ingredients = useLoaderData();
     const navigation = useNavigate();
-    const [currentIngredients, setCurrentIngredients] = useState([]);
     const [q, setQ] = useState("");
     const fetcher = useFetcher();
+    const itemsPerPage = 6;
+    const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(() => {
-        setCurrentIngredients(ingredients.filter(v => {
-            return v.name.toLowerCase().includes(q.toLocaleLowerCase()) 
-            // || v.allergens.toLowerCase().includes(q.toLocaleLowerCase())
-        }));
-    }, [q, ingredients]);
+    const filteredIngredients = ingredients.filter(v => {
+        return v.name.toLowerCase().includes(q.toLowerCase())
+    });
 
-    return <Container>
-        <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+    const totalItems = filteredIngredients.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            <FormControl sx={{ width: "30%" }}>
-                <TextField placeholder="Search..." value={q} onChange={e => setQ(e.target.value)} sx={{ flexGrow: 1 }} />
-            </FormControl>
+    const handlePageChange = (event, newPage) => {
+        setCurrentPage(newPage);
+    };
 
-            <Button variant="outlined" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button>
-        </Box>
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Ime</TableCell>
-                        <TableCell>Measurement Unit</TableCell>
-                        <TableCell>Calories</TableCell>
-                        <TableCell>CarboHydrate</TableCell>
-                        <TableCell>Sugar</TableCell>
-                        <TableCell>Fat</TableCell>
-                        <TableCell>SaturatedFat</TableCell>
-                        <TableCell>Protein</TableCell>
-                        <TableCell>Allergens</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {currentIngredients.map(i => <TableRow>
-                        <TableCell>{i.id}</TableCell>
-                        <TableCell>{i.name}</TableCell>
-                        <TableCell>{i.measurementUnit}</TableCell>
-                        <TableCell>{i.calories}</TableCell>
-                        <TableCell>{i.carboHydrate}</TableCell>
-                        <TableCell>{i.sugar}</TableCell>
-                        <TableCell>{i.fat}</TableCell>
-                        <TableCell>{i.saturatedFat}</TableCell>
-                        <TableCell>{i.protein}</TableCell>
-                        <TableCell> {i.allergens.map((a) => <MenuItem value={a.id}> {a.name} </MenuItem> )} </TableCell>
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentIngredients = filteredIngredients.slice(startIndex, endIndex);
 
-                        <TableCell>
-                            <Stack direction='row'>
-                                <IconButton onClick={async (e) => {
-                                    fetcher.submit({}, {
-                                        method: 'delete',
-                                        action: `/ingredients/${i.id}`
-                                    });
-                                    alert('Uspesno ste obrisali sastojak.');
 
-                                }}>
-                                    <Delete />
-                                </IconButton>
-                                <IconButton onClick={e => {
-                                    navigation(`/ingredients/${i.id}`);
-                                }}>
-                                    <Edit />
-                                </IconButton>
-                            </Stack>
-                        </TableCell>
-                    </TableRow>)}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </Container>
-    
+    return <div className="ingredient-container">
+        <Container>
+            <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+
+                <FormControl sx={{ width: "30%" }}>
+                    <TextField placeholder="Search..." value={q} onChange={e => setQ(e.target.value)} sx={{ flexGrow: 1 }} />
+                </FormControl>
+
+                <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button>
+            </Box>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>ID</TableCell>
+                            <TableCell>Ime</TableCell>
+                            <TableCell>Measurement Unit</TableCell>
+                            <TableCell>Calories</TableCell>
+                            <TableCell>CarboHydrate</TableCell>
+                            <TableCell>Sugar</TableCell>
+                            <TableCell>Fat</TableCell>
+                            <TableCell>SaturatedFat</TableCell>
+                            <TableCell>Protein</TableCell>
+                            <TableCell>Allergens</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {currentIngredients.map(i => <TableRow>
+                            <TableCell>{i.id}</TableCell>
+                            <TableCell>{i.name}</TableCell>
+                            <TableCell>{i.measurementUnit}</TableCell>
+                            <TableCell>{i.calories}</TableCell>
+                            <TableCell>{i.carboHydrate}</TableCell>
+                            <TableCell>{i.sugar}</TableCell>
+                            <TableCell>{i.fat}</TableCell>
+                            <TableCell>{i.saturatedFat}</TableCell>
+                            <TableCell>{i.protein}</TableCell>
+                            <TableCell> {i.allergens.map((a) => <MenuItem value={a.name}> {a.name} </MenuItem>)} </TableCell>
+
+                            <TableCell>
+                                <Stack direction='row'>
+                                    <IconButton onClick={async (e) => {
+                                        fetcher.submit({}, {
+                                            method: 'delete',
+                                            action: `/ingredients/${i.id}`
+                                        });
+                                        alert('Successfully deleted ingredient.');
+
+                                    }}>
+                                        <Delete />
+                                    </IconButton>
+                                    <IconButton onClick={e => {
+                                        navigation(`/ingredients/${i.id}`);
+                                    }}>
+                                        <Edit />
+                                    </IconButton>
+                                </Stack>
+                            </TableCell>
+                        </TableRow>)}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Pagination
+                sx={{ marginTop: 3 }}
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+            />
+        </Container>
+    </div>
 }
-
 export default ShowIngredients;

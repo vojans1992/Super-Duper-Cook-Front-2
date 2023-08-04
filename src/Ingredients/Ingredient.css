@@ -1,0 +1,9 @@
+.ingredient-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../Slike/Slika4.jpeg);
+    background-size: cover;
+  }

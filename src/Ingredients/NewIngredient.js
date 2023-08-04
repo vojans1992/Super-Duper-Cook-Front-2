@@ -2,73 +2,202 @@ import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Butto
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
+
+const InputField = ({
+    label,
+    placeholder,
+    fieldName,
+    value,
+    error,
+    onChange,
+}) => (
+    <TextField
+        sx={{ width: "100%" }}
+        fullWidth
+        required
+        id={`outlined-${fieldName}-input`}
+        value={value}
+        label={label}
+        placeholder={placeholder}
+        error={!!error}
+        helperText={error}
+        onChange={(e) => onChange(fieldName, e.target.value)}
+    />
+);
+
+
 const NewIngredient = () => {
 
-    const [name, setName] = useState('');
-    const [munit, setMunit] = useState('');
-    const [calories, setCalories] = useState('');
-    const [chydrate, setChydrate] = useState('');
-    const [sugar, setSugar] = useState('');
-    const [fat, setFat] = useState('');
-    const [saturatedFat, setSaturatedFat] = useState('');
-    const [protein, setProtein] = useState('');
+    const loader_data = useLoaderData();
+    const [allergens, setAllergens] = useState(loader_data[0]);    
     const [selectedAllergens, setSelectedAllergens] = useState([]);
     const [selectedAllergen, setSelectedAllergen] = useState(null);
-
-    const [globalError, setGlobalError] = useState(false);
-    const errorMessageTemplate = "Please enter the ";
-    const [nameError, setNameError] = useState("");
-    const [munitError, setMunitError] = useState("");
-    const [caloriesError, setCaloriesError] = useState("");
-    const [chydrateError, setChydrateError] = useState("");
-    const [sugarError, setSugarError] = useState("");
-    const [fatError, setFatError] = useState("");
-    const [saturatedFatError, setSaturatedFatError] = useState("");
-    const [proteinError, setProteinError] = useState("");
-    const [allergenError, setAllergenError] = useState("");
-
-    const loader_data = useLoaderData();
-    const [allergens, setAllergens] = useState(loader_data[0]);
-
     const navigate = useNavigate();
 
+    const [formFields, setFormFields] = useState({
+        name: "",
+        munit: "",
+        calories: "",
+        chydrate: "",
+        sugar: "",
+        fat: "",
+        saturatedFat: "",
+        protein: "",
+        allergens: [],
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        name: "",
+        munit: "",
+        calories: "",
+        chydrate: "",
+        sugar: "",
+        fat: "",
+        saturatedFat: "",
+        protein: "",
+        allergens: "",
+        global: "",
+    });
+    
+    const validateDecimal = (value, fieldName) => {
+        const isValid = /^\d+(\.\d{1,2})?$/.test(value);
+        return isValid
+            ? ""
+            : `Please enter a valid ${fieldName.toLowerCase()} value. It is compulsory to have a dot ('. ') in a text for a decimal value.`;
+    };
+
+    const handleFieldChange = (fieldName, value) => {
+        setFormFields((prevFields) => ({
+            ...prevFields,
+            [fieldName]: value,
+        }));
+
+        if (value !== "") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                [fieldName]: "",
+            }));
+        } else {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                [fieldName]: `Please enter the ${fieldName.toLowerCase()}.`,
+            }));
+        }
+
+        if (fieldName === "munit") {
+            const isValidMeasurement = /\b\d+(?:\.\d+)?[A-Z]*(?:\/[A-Z]+)?\b/.test(value);
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                munit: isValidMeasurement
+                    ? ""
+                    : "Please enter a valid measurement unit. A measurement unit is valid if it has at least one digit and letter for measurement unit. Example: 100 g, 100 ml, 200 g...",
+            }));
+        } else if (fieldName === "calories") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                calories: validateDecimal(value, "Calories"),
+            }));
+        } else if (fieldName === "chydrate") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                chydrate: validateDecimal(value, "Carbo Hydrate"),
+            }));
+        } else if (fieldName === "sugar") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                sugar: validateDecimal(value, "Sugar"),
+            }));
+        } else if (fieldName === "fat") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                fat: validateDecimal(value, "fat"),
+            }));
+        } else if (fieldName === "saturatedFat") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                saturatedFat: validateDecimal(value, "saturatedFat"),
+            }));
+        } else if (fieldName === "protein") {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                protein: validateDecimal(value, "protein"),
+            }));
+        }
+    };
+
+    const handleAllergenChange = (selectedAllergens) => {
+        setSelectedAllergens(selectedAllergens);
+
+        if (selectedAllergens.length === 0) {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                allergens: "Please select at least one allergen",
+            }));
+        } else {
+            setFormErrors((prevErrors) => ({
+                ...prevErrors,
+                allergens: "",
+            }));
+        }
+    };
+
+    
     const save = async () => {
 
-        if (name == '' || munit == '' || calories == '' || chydrate == '' || sugar == '' || fat == '' || saturatedFat == '' || protein == '' || selectedAllergens.size == 0) {
-            setGlobalError('Please fill all fields in the form');
+        const { name, munit, calories, chydrate, sugar, fat, saturatedFat, protein, allergens } = formFields;
+
+        if (!name || !munit || !calories || !chydrate || !sugar || !fat || !saturatedFat || !protein || selectedAllergens.length === 0) {
+            setFormErrors({ ...formErrors, global: "Please fill all fields in the form" });
             return;
         }
-        const new_ingredient = {
-            'name': name,
-            'measurementUnit': munit,
-            'calories': calories,
-            'carboHydrate': chydrate,
-            'sugar': sugar,
-            'fat': fat,
-            'saturatedFat': saturatedFat,
-            'protein': protein,
-            'allergens': selectedAllergens
-        };
-        let response = await fetch('http://localhost:8080/api/v1/ingredients/new', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(new_ingredient)
-        });
-        console.log(response);
-        if (response.ok) {
-            let d = await response.json();
-            console.log(JSON.stringify(d));
-            alert('Uspesno ste dodali novi sastojak');
-            navigate('/ingredients');
-        } else {
-            console.log('Dodavanje novog sastojka nije uspelo')
-            console.log(response);
-        }
-    }
 
-    return <>
+        setFormErrors({ ...formErrors, global: "" });
+
+        const newIngredient = {
+            name,
+            measurementUnit: munit,
+            calories,
+            carboHydrate: chydrate,
+            sugar,
+            fat,
+            saturatedFat,
+            protein,
+            allergens: selectedAllergens
+        };
+        console.log("Payload:", JSON.stringify(newIngredient));
+
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/ingredients/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newIngredient)
+            });
+
+            if (response.ok) {
+                const d = await response.json();
+                console.log(JSON.stringify(d, null, 4));
+                alert("Successfully added ingredient.");
+                navigate('/ingredients');
+            } else {
+                console.log("Failed to add ingredient");
+                console.log(await response.text());
+                console.log(response.statusText);
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+            console.log("Response Status:", error.response.status);
+            console.log("Response Data:", error.response.data);
+        }
+    };
+
+    const isFormValid = () => {
+        const errors = Object.values(formErrors);
+        return errors.every((error) => !error);
+    };
+
+    return <div className="ingredient-container">
 
         <Container maxWidth="sm" sx={{ paddingTop: "15px" }}>
             <Box
@@ -83,169 +212,81 @@ const NewIngredient = () => {
                 }}
                 noValidate
                 autoComplete="off">
-                <Typography variant="h6">Please enter the values of the new ingredient.</Typography>
+                <Typography variant="h6">Please enter the values of the new ingredient:</Typography>
 
-                <TextField
-                    sx={{ width: "100%" }}
-                    fullWidth
-                    required
-                    id="outlined-required"
+                <InputField
                     label="Ingredient name"
                     placeholder="Ingredient name"
-                    helperText={nameError}
-                    error={nameError === "" ? false : true}
-                    onChange={(e) => {
-                        setName(e.target.value);
-                        if (e.target.value !== "") setNameError("");
-                        else setNameError(errorMessageTemplate + " ingredient name.");
-                    }}
+                    fieldName="name"
+                    value={formFields.name}
+                    error={formErrors.name}
+                    onChange={handleFieldChange}
                 />
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-munit-input"
+                <InputField
                     label="Measurement Unit"
                     placeholder="Measurement Unit"
-                    error={munitError}
-                    helperText={munitError ? munitError : "Example: 100 g, 100 ml, 200 g..."}
-                    // aria-aria-errormessage='ISBN is required'
-                    onChange={(e) => {
-                        setMunit(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/\b\d+(?:\.\d+)?[A-Z]*(?:\/[A-Z]+)?\b/)));
-                        if (e.target.value.match(/\b\d+(?:\.\d+)?[A-Z]*(?:\/[A-Z]+)?\b/) == null)
-                            setMunitError(
-                                errorMessageTemplate +
-                                "valid measurement unit. A measurement unit is valid if it has at least one digit and letter for measurement unit."
-                            );
-                        else setMunitError("");
-                    }}
+                    fieldName="munit"
+                    value={formFields.munit}
+                    error={formErrors.munit}
+                    onChange={handleFieldChange}
                 />
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-calories-input"
+
+                <InputField
                     label="Calories"
                     placeholder="Calories"
-                    error={caloriesError}
-                    helperText={caloriesError}
-                    onChange={(e) => {
-                        setCalories(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setCaloriesError(
-                                errorMessageTemplate +
-                                " a calories value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setCaloriesError("");
-                    }}
+                    fieldName="calories"
+                    value={formFields.calories}
+                    error={formErrors.calories}
+                    onChange={handleFieldChange}
                 />
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-CarboHydrate-input"
+
+
+                <InputField
                     label="CarboHydrate"
                     placeholder="CarboHydrate"
-                    error={chydrateError}
-                    helperText={chydrateError}
-                    onChange={(e) => {
-                        setChydrate(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setChydrateError(
-                                errorMessageTemplate +
-                                " a Carbo Hydrate value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setChydrateError("");
-                    }}
+                    fieldName="chydrate"
+                    value={formFields.chydrate}
+                    error={formErrors.chydrate}
+                    onChange={handleFieldChange}
                 />
-
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-Sugar-input"
+                <InputField
                     label="Sugar"
                     placeholder="Sugar"
-                    error={sugarError}
-                    helperText={sugarError}
-                    onChange={(e) => {
-                        setSugar(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setSugarError(
-                                errorMessageTemplate +
-                                " a sugar value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setSugarError("");
-                    }}
+                    fieldName="sugar"
+                    value={formFields.sugar}
+                    error={formErrors.sugar}
+                    onChange={handleFieldChange}
                 />
 
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-Fat-input"
+                <InputField
                     label="Fat"
                     placeholder="Fat"
-                    error={fatError}
-                    helperText={fatError}
-                    onChange={(e) => {
-                        setFat(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setFatError(
-                                errorMessageTemplate +
-                                " a fat value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setFatError("");
-                    }}
+                    fieldName="fat"
+                    value={formFields.fat}
+                    error={formErrors.fat}
+                    onChange={handleFieldChange}
                 />
 
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-SaturatedFat-input"
+                <InputField
                     label="SaturatedFat"
                     placeholder="SaturatedFat"
-                    error={saturatedFatError}
-                    helperText={saturatedFatError}
-                    onChange={(e) => {
-                        setSaturatedFat(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setSaturatedFatError(
-                                errorMessageTemplate +
-                                " a saturated fat value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setSaturatedFatError("");
-                    }}
-                />
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-Protein-input"
-                    label="Protein"
-                    placeholder="Protein"
-                    error={proteinError}
-                    helperText={proteinError}
-                    onChange={(e) => {
-                        setProtein(e.target.value);
-                        console.log(JSON.stringify(e.target.value.match(/^\d+(\.\d{1,2})?$/)));
-                        if (e.target.value.match(/^\d+(\.\d{1,2})?$/) == null)
-                            setProteinError(
-                                errorMessageTemplate +
-                                " a protein value. It is compulsory to have a dot ('. ') in a text for a decimal value."
-                            );
-                        else setProteinError("");
-                    }}
+                    fieldName="saturatedFat"
+                    value={formFields.saturatedFat}
+                    error={formErrors.saturatedFat}
+                    onChange={handleFieldChange}
                 />
 
-                <FormControl sx={{ width: "100%" }} error={allergenError}>
+
+                <InputField
+                    label="Protein"
+                    placeholder="Protein"
+                    fieldName="protein"
+                    value={formFields.protein}
+                    error={formErrors.protein}
+                    onChange={handleFieldChange}
+                />
+
+                <FormControl sx={{ width: "100%" }} error={!!formErrors.allergens}>
 
                     <Stack direction='column'>
                         <Typography> Allergens</Typography>
@@ -283,15 +324,18 @@ const NewIngredient = () => {
                     </Stack>
                 </FormControl>
 
-                <Button onClick={save} disabled={nameError || munitError || caloriesError || chydrateError || sugarError
-                    || fatError || saturatedFatError || proteinError || allergenError}>
-                    {" "}
-                    Save{" "}
+                <Button
+                    variant="contained"
+                    onClick={save}
+                    disabled={!isFormValid()}
+                >
+                    Save
                 </Button>
-                <FormHelperText error={globalError}>{globalError}</FormHelperText>
+                <FormHelperText error={!!formErrors.global}>{formErrors.global}</FormHelperText>
             </Box>
         </Container>
-    </>
+        
+    </div>
 }
 
 export default NewIngredient;

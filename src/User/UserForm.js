@@ -57,7 +57,17 @@ const UserForm = () => {
     };
 
     return (<Container maxWidth="sm">
-        <Box>
+        <Box
+            component="form"
+            sx={{
+                display: "flex",
+                gap: "10px",
+                "flex-direction": "column",
+                "align-items": "center",
+                "& .MuiTextField-root": { m: 1, width: "100%" },
+            }}
+            noValidate
+            autoComplete="off">
             <TextField>
                 sx={{ width: "100%" }}
                 fullWidth

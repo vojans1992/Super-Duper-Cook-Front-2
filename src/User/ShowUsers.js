@@ -20,7 +20,7 @@ const ShowUsers = () => {
     useEffect (()=> {
         if (search === '') {
         } else {
-            setUsers(allUsers.filter((u) => u.nsername.toUpperCase().includes(search.toUpperCase())));
+            setUsers(allUsers.filter((u) => u.username.toUpperCase().includes(search.toUpperCase())));
         }
     },[search])
     return(

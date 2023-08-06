@@ -9,6 +9,7 @@ import Login from './Login'; // Importujemo komponentu za stranicu za login
 import ShowRecipes from './Recipes/ShowRecipes'
 import NewRecipe from './Recipes/NewRecipe'
 import ShowUsers from './User/ShowUsers';
+import UserForm from './User/UserForm';
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,16 @@ const router = createBrowserRouter([
     loader: async () => {
       return fetch("http://localhost:8080/api/v1/users");
     }
-  }
+  },
+  {
+    path: "users/new_user",
+    element: <UserForm/>,
+    loader: async () => {
+      return fetch("http://localhost:8080/user");
+    }
+  },
+
+
 
 ]);
 

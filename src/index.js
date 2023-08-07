@@ -4,13 +4,14 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { Outlet, RouterProvider, createBrowserRouter, useRouteError } from 'react-router-dom';
 import App from './App';
-import Login from './Login'; // Importujemo komponentu za stranicu za login
+import Login from './Login';
 import ShowRecipes from './Recipes/ShowRecipes'
 import NewRecipe from './Recipes/NewRecipe'
 import NewIngredient from './Ingredients/NewIngredient';
 import IngredientEdit from './Ingredients/IngredientEdit';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import ShowIngredients from './Ingredients/ShowIngredients';
+import ShowUsers from './User/ShowUsers';
 
 const ErrorDisplay = ({ entity }) => {
   const error = useRouteError();
@@ -32,12 +33,39 @@ const ErrorDisplay = ({ entity }) => {
   </Container>
 }
 
+const API_BASE_URL = 'http://localhost:8080/api/v1'; 
+
+const withAuthorization = (headers = {}) => {
+  const token = JSON.parse(localStorage.getItem('user')).token;
+  return {
+    ...headers,
+    'Content-Type': 'application/json',
+    Authorization: token,
+    Accept: 'application/json'
+  };
+};
+
+const loadIngredients = async () => {
+  const response = await fetch(`${API_BASE_URL}/ingredients`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  return response;
+};
+
+const loadAllergens = async () => {
+  const response = await fetch(`${API_BASE_URL}/allergen`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  return response;
+};
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
   },
-
   {
     path: "recipes",
     element: <ShowRecipes />,
@@ -63,78 +91,71 @@ const router = createBrowserRouter([
     element: <Login />, // Koristimo komponentu Login za ovu rutu
   },
   {
-    path: "ingredients",
-    element: <ShowIngredients/>,
-    errorElement: <ErrorDisplay entity='sastojaka.'/>,
-    loader: async () => { 
-      return fetch('http://localhost:8080/api/v1/ingredients');
-    },
-    // action: async () => {
-    //   return fetch ('http://localhost:8080/api/v1/ingredients', {
-    //     method: 'GET',
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //       // "Authorization": JSON.parse(localStorage.getItem('user')).token,
-    //       //"Accept": "application/json"              
-    //     },
-                  
-    //   });
-    // }
+    path: 'ingredients',
+    element: <ShowIngredients />,
+    errorElement: <ErrorDisplay entity="sastojaka." />,
+    loader: loadIngredients
   },
   {
     path: 'ingredients/new_ingredient',
-    element: <NewIngredient/>,
+    element: <NewIngredient />,
     errorElement: <ErrorDisplay entity='sastojaka.' />,
     loader: async () => {
-      
-      const allergens_a = await fetch('http://localhost:8080/api/v1/allergen');
-      const allergens = await allergens_a.json();
 
-      return [allergens];
-    }
-  }, 
+      const allergenResponse = await loadAllergens();
+      const allergen = await Promise.all([
+        allergenResponse.json()
+      ]);
+      return allergen;
+    },
+  },
   {
     path: "ingredients/:id",
-    element: <IngredientEdit/>,
-    errorElement: <ErrorDisplay entity='sastojaka.'/>,    
+    element: <IngredientEdit />,
+    errorElement: <ErrorDisplay entity='sastojaka.' />,
     loader: async ({ params }) => {
-
-      const ingredient_i = await fetch(`http://localhost:8080/api/v1/ingredients/${params.id}`);
-      const ingredient = await ingredient_i.json();        
-      const allergen_a = await fetch("http://localhost:8080/api/v1/allergen");
-      const allergen = await allergen_a.json(); 
-
+      const ingredientResponse = await fetch(`${API_BASE_URL}/ingredients/${params.id}`, {
+        method: 'GET',
+        headers: withAuthorization()
+      });
+      const allergenResponse = await loadAllergens();
+      const [ingredient, allergen] = await Promise.all([
+        ingredientResponse.json(),
+        allergenResponse.json()
+      ]);
       return [ingredient, allergen];
     },
     action: async ({ params, request }) => {
       if (request.method === 'DELETE') {
-        return fetch(`http://localhost:8080/api/v1/ingredients/${params.id}`, {
+        return fetch(`${API_BASE_URL}/ingredients/${params.id}`, {
           method: 'DELETE',
-          //mode: 'cors',
-          headers: {
-            "Content-Type": "application/json",
-            // "Authorization": JSON.parse(localStorage.getItem('user')).token,
-            // "Accept": "application/json"
-          },
-        }
-        );
+          mode: 'cors',
+          headers: withAuthorization()
+        });
       } else if (request.method === 'PUT') {
         let data = Object.fromEntries(await request.formData());
         //data.teachers = JSON.parse(data.teachers);    
-        console.log(JSON.stringify(data, null, 4));       
-        return fetch(`http://localhost:8080/api/v1/ingredients/${params.id}`, {
+        console.log(JSON.stringify(data, null, 4));
+        return fetch(`${API_BASE_URL}/ingredients/${params.id}`, {
           method: 'PUT',
           mode: 'cors',
-          headers: {
-            "Content-Type": "application/json",
-            // "Authorization": JSON.parse(localStorage.getItem('user')).token,
-            // "Accept": "application/json"
-          },
+          headers: withAuthorization(),
           body: JSON.stringify(data)
         });
       }
     }
   },
+  {
+    path: "users",
+    element: <ShowUsers />,
+    loader: async () => {
+      return fetch("http://localhost:8080/api/v1/users");
+    }
+  }
+
+
+
+
 
 
 ]);

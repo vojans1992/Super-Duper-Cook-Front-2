@@ -1,7 +1,6 @@
 import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText, IconButton } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import Menu from '../Menu';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 
@@ -171,8 +170,11 @@ const NewIngredient = () => {
         try {
             const response = await fetch('http://localhost:8080/api/v1/ingredients/new', {
                 method: 'POST',
+                mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": JSON.parse(localStorage.getItem('user')).token,
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify(newIngredient)
             });

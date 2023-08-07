@@ -19,6 +19,9 @@ const Menu = () => {
         <li>
           <Link to="/recipes">Recipes</Link>
         </li>
+        <li>
+          <Link to="/users">Users</Link>
+        </li>
         <Link to="/login">
           <AccountCircleIcon className={styles["menu-icon"]} />
         </Link>

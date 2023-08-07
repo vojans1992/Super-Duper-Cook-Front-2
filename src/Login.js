@@ -1,46 +1,84 @@
-import React from 'react';
-import './Login.css'; // Ako imate poseban CSS fajl za stilizaciju Login komponente, uvezite ga ovde
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Link } from "react-router-dom";
-import Menu from './Menu';
+import React, { useState } from 'react';
+import { Box, Button, TextField } from '@mui/material';
+import './Login.css';
+import { useNavigate } from "react-router-dom";
+import { styled } from '@mui/material/styles';
+import { orange } from '@mui/material/colors';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+
+  const loginUser = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/login?username=${username}&password=${password}`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Origin': 'http://localhost:3000',
+        },
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/');
+      } else {
+        console.log('Error during login');
+      }
+    } catch (error) {
+      console.error('An error occurred during login:', error);
+    }
+  };
+
+  const ColorButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(orange[500]),
+    backgroundColor: orange[500],
+    '&:hover': {
+      backgroundColor: orange[700],
+    },
+  }));
+
   return (
-      
     <div className="login-container">
-        <Menu />
       <h1>Login Page</h1>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          '& > :not(style)': { m: 10 },
+          '& > :not(style)': { m: 2 }, // Reduced margin for a cleaner layout
         }}
       >
         <TextField
-          style={{ marginBottom: '1px', color: 'black' }} // Boja teksta u TextField-u
           className="custom-textfield"
           helperText={<span className="white-helper-text">Please enter your username</span>}
-          id="demo-helper-text-aligned-username"
           label="Username"
           variant="filled"
           color="primary"
+          required
+          placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
-          style={{ marginBottom: '1px', color: 'black' }} // Boja teksta u TextField-u
           className="custom-textfield"
           helperText={<span className="white-helper-text">Please enter your password</span>}
-          id="demo-helper-text-aligned-password"
           label="Password"
           type="password"
           variant="filled"
           color="primary"
+          required
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
       </Box>
-      {/* Dodajte ostatak vašeg koda za login stranicu */}
+      <ColorButton onClick={loginUser} variant="contained" >
+        Login
+      </ColorButton>
     </div>
   );
 };

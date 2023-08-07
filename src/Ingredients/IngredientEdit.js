@@ -172,11 +172,11 @@ const IngredientEdit = () => {
         try {
             const response = await fetch(`http://localhost:8080/api/v1/ingredients/dto/${ingredient.id}`, {
                 method: "PUT",
-                //mode: 'cors',
+                mode: 'cors',
                 headers: {
-                    "Content-Type": "application/json"
-                    //  "Authorization": JSON.parse(localStorage.getItem('user')).token,
-                    //  "Accept": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": JSON.parse(localStorage.getItem('user')).token,
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify(newIngredient),
             });
@@ -206,7 +206,7 @@ const IngredientEdit = () => {
     return <div className="ingredient-container">
         <Container maxWidth="sm">
 
-        <Box sx={{ display: "flex", alignItems: "left" }}>
+            <Box sx={{ display: "flex", alignItems: "left" }}>
                 <IconButton onClick={() => { navigate('/ingredients') }}>
                     <ArrowBackRoundedIcon />
                 </IconButton>
@@ -224,7 +224,7 @@ const IngredientEdit = () => {
                 noValidate
                 autoComplete="off"
             >
-                 <Typography variant="h6">Please edit the values of the selected ingredient:</Typography>
+                <Typography variant="h6">Please edit the values of the selected ingredient:</Typography>
 
                 <InputField
                     label="Ingredient name"

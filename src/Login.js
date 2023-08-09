@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Link } from '@mui/material';
 import './Login.css';
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { orange } from '@mui/material/colors';
+import './App.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -51,12 +52,11 @@ const Login = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          '& > :not(style)': { m: 2 }, // Reduced margin for a cleaner layout
+          '& > :not(style)': { m: 2 },
         }}
       >
         <TextField
-          className="custom-textfield"
-          helperText={<span className="white-helper-text">Please enter your username</span>}
+          className="custom-textfield"          
           label="Username"
           variant="filled"
           color="primary"
@@ -66,7 +66,6 @@ const Login = () => {
         />
         <TextField
           className="custom-textfield"
-          helperText={<span className="white-helper-text">Please enter your password</span>}
           label="Password"
           type="password"
           variant="filled"
@@ -76,9 +75,13 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </Box>
-      <ColorButton onClick={loginUser} variant="contained" >
+      <ColorButton onClick={loginUser} variant="contained">
         Login
       </ColorButton>
+   
+      <div className="textLogin">
+          Don't have an account? <Link href="/signup">Sign Up</Link>          
+        </div>  
     </div>
   );
 };

@@ -38,7 +38,7 @@
     margin: 0 auto; /* Centriramo meni na horizontali */
     padding: 10px 0; /* Rastojanje između linkova i linije ispod menija */
     border: 2px solid orangered; /* Ivica menija u beloj boji */
-    position: absolute;
+    position: relative;
   }
   
   .menu ul {
@@ -46,16 +46,17 @@
     margin: 0;
     padding: 0;
     display: flex;
+    flex-direction: column;
   }
   
   .menu li {
-    margin: 0 20px; /* Rastojanje između linkova u meniju */
+    margin: 10px 0; /* Rastojanje između linkova u meniju */
   }
   
   .menu a {
     text-decoration: none;
     font-family: 'Pacifico', cursive; /* Dodajte font Pacifico */
-    color: orangered; /* Boja teksta linkova */
+    color: yellow; /* Boja teksta linkova */
     font-size: 25px;
   }
   
@@ -94,6 +95,15 @@
     left: 10%; /* Pomeranje dugmeta u levo */
     top: 70%; /* Pomeranje dugmeta prema vrhu */
   }
+
+  .menu-item {
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    color: lightsalmon;
+    display: flex;
+    align-items: center;   
+  }
   
   .button-container {
     display: flex;
@@ -115,9 +125,26 @@
     bottom: 30%;
     transform: translateX(-50%);
   }
+  .textLogin {
+    
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    color: lightsalmon;
+    position: absolute;   
+    bottom: 45%;
+    
+  }
+  .textMenu {    
+    font-family: 'Pacifico', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    color: lightsalmon;
+    position: absolute;    
+  }
   .menu-icon {
-    position: relative;
-    left: 70%; /* Pomeranje ikonice u desno */
-    font-size: 40px !important; /* Promena veličine ikonice sa !important */
+    font-size: 40px !important;
     color: orangered;
   }
+
+  

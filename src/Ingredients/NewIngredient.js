@@ -2,6 +2,7 @@ import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Butto
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import './Ingredient.css';
 
 
 const InputField = ({
@@ -13,7 +14,7 @@ const InputField = ({
     onChange,
 }) => (
     <TextField
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", backgroundColor: "lightcyan" }}
         fullWidth
         required
         id={`outlined-${fieldName}-input`}
@@ -208,6 +209,7 @@ const NewIngredient = () => {
                 <IconButton onClick={() => { navigate('/ingredients') }}>
                     <ArrowBackRoundedIcon />
                 </IconButton>
+                <Typography variant="h6">Please enter the values of the new ingredient:</Typography>
             </Box>
             <Box
                 component="form"
@@ -221,9 +223,6 @@ const NewIngredient = () => {
                 }}
                 noValidate
                 autoComplete="off">
-
-
-                <Typography variant="h6">Please enter the values of the new ingredient:</Typography>
 
                 <InputField
                     label="Ingredient name"

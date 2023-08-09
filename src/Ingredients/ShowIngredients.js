@@ -46,7 +46,7 @@ const ShowIngredients = () => {
 
                 <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button>
             </Box>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper}  sx={{ width: "100%", backgroundColor: "lightcyan" }}>
                 <Table>
                     <TableHead>
                         <TableRow>

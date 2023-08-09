@@ -12,7 +12,7 @@ const InputField = ({
     onChange,
 }) => (
     <TextField
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", backgroundColor: "lightcyan" }}
         fullWidth
         required
         id={`outlined-${fieldName}-input`}
@@ -210,6 +210,7 @@ const IngredientEdit = () => {
                 <IconButton onClick={() => { navigate('/ingredients') }}>
                     <ArrowBackRoundedIcon />
                 </IconButton>
+                <Typography variant="h6">Please edit the values of the selected ingredient:</Typography>
             </Box>
 
             <Box
@@ -224,8 +225,6 @@ const IngredientEdit = () => {
                 noValidate
                 autoComplete="off"
             >
-                <Typography variant="h6">Please edit the values of the selected ingredient:</Typography>
-
                 <InputField
                     label="Ingredient name"
                     placeholder="Ingredient name"

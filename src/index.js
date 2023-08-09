@@ -12,6 +12,8 @@ import IngredientEdit from './Ingredients/IngredientEdit';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import ShowIngredients from './Ingredients/ShowIngredients';
 import ShowUsers from './User/ShowUsers';
+import EditUser from './User/EditUser';
+import UserForm from './User/UserForm';
 
 const ErrorDisplay = ({ entity }) => {
   const error = useRouteError();
@@ -33,7 +35,7 @@ const ErrorDisplay = ({ entity }) => {
   </Container>
 }
 
-const API_BASE_URL = 'http://localhost:8080/api/v1'; 
+const API_BASE_URL = 'http://localhost:8080/api/v1';
 
 const withAuthorization = (headers = {}) => {
   const token = JSON.parse(localStorage.getItem('user')).token;
@@ -55,6 +57,14 @@ const loadIngredients = async () => {
 
 const loadAllergens = async () => {
   const response = await fetch(`${API_BASE_URL}/allergen`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  return response;
+};
+
+const loadUsers = async () => {
+  const response = await fetch(`${API_BASE_URL}/users`, {
     method: 'GET',
     headers: withAuthorization()
   });
@@ -134,7 +144,6 @@ const router = createBrowserRouter([
         });
       } else if (request.method === 'PUT') {
         let data = Object.fromEntries(await request.formData());
-        //data.teachers = JSON.parse(data.teachers);    
         console.log(JSON.stringify(data, null, 4));
         return fetch(`${API_BASE_URL}/ingredients/${params.id}`, {
           method: 'PUT',
@@ -148,10 +157,69 @@ const router = createBrowserRouter([
   {
     path: "users",
     element: <ShowUsers />,
+    errorElement: <ErrorDisplay entity="korisnika." />,
+    loader: loadUsers
+  },
+  {
+    path: 'users/new_user',
+    element: <UserForm />,
+    errorElement: <ErrorDisplay entity='korisnika.' />,
     loader: async () => {
-      return fetch("http://localhost:8080/api/v1/users");
+
+      const userResponse = await loadUsers();
+      const user = await Promise.all([
+        userResponse.json()
+      ]);
+      return user;
+    },
+  },
+  {
+    path: "users/:id",
+    element: <EditUser/>,
+    errorElement: <ErrorDisplay entity='korisnika.' />,
+    loader: async ({ params }) => {
+
+      return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+        method: 'GET',  
+        mode: 'cors',   
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": JSON.parse(localStorage.getItem('user')).token,
+          "Accept": "application/json"
+        },
+
+      });
+    },
+    action: async ({ params, request }) => {
+
+      if (request.method === 'DELETE') {
+        return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+          method: 'DELETE',
+          mode: 'cors',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token,
+            "Accept": "application/json"
+          },
+        }
+        );
+      } else if (request.method === 'PUT') {
+         let data = Object.fromEntries(await request.formData());
+         data.users = JSON.parse(data.users);    
+         console.log(JSON.stringify(data, null, 4));       
+        return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token,
+            "Accept": "application/json"
+          },
+   
+        });
+      }
     }
-  }
+  },
 
 
 

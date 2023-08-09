@@ -1,6 +1,7 @@
 body{
-    background-image: none;
+    background-image: url(../Slike/Slika5.jpg);
     background-color: white;
+    background-size: cover;
   }
   .menu{
     margin-bottom: 50px;

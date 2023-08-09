@@ -11,6 +11,7 @@ import NewIngredient from './Ingredients/NewIngredient';
 import IngredientEdit from './Ingredients/IngredientEdit';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import ShowIngredients from './Ingredients/ShowIngredients';
+import RecipeDetails from './Recipes/RecipeDetails';
 
 const ErrorDisplay = ({ entity }) => {
   const error = useRouteError();
@@ -82,6 +83,17 @@ const router = createBrowserRouter([
     // }
   },
   {
+    path: "recipes/:id",
+    element: <RecipeDetails />, // Koristićemo novu komponentu za prikaz detalja recepta
+    loader: async ({ params }) => {
+      const response = await fetch(`http://localhost:8080/api/v1/recipes/${params.id}`);
+      const recipe = await response.json();
+      return recipe;
+    },
+  },
+
+
+  {
     path: 'ingredients/new_ingredient',
     element: <NewIngredient/>,
     errorElement: <ErrorDisplay entity='sastojaka.' />,
@@ -93,6 +105,7 @@ const router = createBrowserRouter([
       return [allergens];
     }
   }, 
+  
   {
     path: "ingredients/:id",
     element: <IngredientEdit/>,

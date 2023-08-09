@@ -9,6 +9,8 @@ const ShowRecipes = () => {
     const [currentRecipes, setCurrentRecipes] = useState([recipes]);
     const [q, setQ] = useState("");
 
+    console.log(recipes)
+
     useEffect(() => {
         setCurrentRecipes(recipes.filter(r => {
             return r.title.toLowerCase().includes(q.toLocaleLowerCase())

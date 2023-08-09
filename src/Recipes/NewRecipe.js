@@ -1,7 +1,8 @@
 import { Option } from "@mui/base";
-import { Box, Container, TextField, FormHelperText, Button, Autocomplete, Stack, FormControl, Chip, Typography, MenuItem, InputLabel, Select, Grid } from "@mui/material";
+import { Box, Container, TextField, FormHelperText, Button, Autocomplete, Stack, FormControl, Chip, Typography, MenuItem, InputLabel, Select, Grid, ListItem, ListItemText, List } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const NewRecipe = () => {
 
@@ -12,11 +13,10 @@ const NewRecipe = () => {
     const [guide, setGuide] = useState('');
     const [preparationTime, setPreparationTime] = useState(0);
     const [quantity, setQuantity] = useState('');
-    const [authorId, setAuthorId] = useState(0);
-    const [ingredientIds, setIngredientIds] = useState([]);
-    const [selectedIngredientIdAndAmount, setSelectedIngredientIdAndAmount] = useState([]);
+    const [selectedIngredientAndAmount, setSelectedIngredientAndAmount] = useState([]);
+    const [ingredientsAndAmountsForDto, setIngredientsAndAmountsForDto] = useState([]);
     const [ingredientAmount, setIngredientAmount] = useState(0);
-    const [ingredientId, setIngredientId] = useState(0);
+    const [ingredient, setIngredient] = useState({});
 
     const [globalError, setGlobalError] = useState(false);
     const errorMessageTemplate = "Please enter the ";
@@ -25,19 +25,17 @@ const NewRecipe = () => {
     const [guideError, setGuideError] = useState('');
     const [preparationTimeError, setPreparationTimeError] = useState(0);
     const [quantityError, setQuantityError] = useState('');
-    const [authorIdError, setAuthorIdError] = useState(0);
-    const [ingredientIdError, setIngredientIdError] = useState(0);
+    const [ingredientError, setIngredientError] = useState({});
     const [ingredientAmountError, setIngredientAmountError] = useState(0);
 
     const loader_data = useLoaderData();
     const [ingredients, setIngredients] = useState(loader_data[0]);
-    const [authors, setAuthors] = useState(loader_data[1]);
 
     const navigate = useNavigate();
 
     const save = async () => {
 
-        if (title == '' || description == '' || guide == '' || preparationTime == 0 || quantity == '' || authorId == 0 || ingredientIds.size == 0) {
+        if (title == '' || description == '' || guide == '' || preparationTime == 0 || quantity == '' || selectedIngredientAndAmount.size == 0) {
             setGlobalError('Please fill all fields in the form');
             return;
         }
@@ -47,8 +45,8 @@ const NewRecipe = () => {
             'guide': guide,
             'preparationTime': preparationTime,
             'quantity': quantity,
-            'authorId': authorId,
-            'ingredientIds': ingredientIds
+            'authorUsername': localStorage.getItem('user').username,
+            'ingredientIds': ingredientsAndAmountsForDto
         };
         let response = await fetch('http://localhost:8080/api/v1/recipes', {
             method: 'POST',
@@ -68,13 +66,19 @@ const NewRecipe = () => {
         }
     }
     const handleAddPair = () => {
-        if (ingredientId && ingredientAmount) {
-            setSelectedIngredientIdAndAmount((prevPairs) => [...prevPairs, { ingredientId: ingredientId, amount: Number(ingredientAmount) }]);
+        if (ingredient && ingredientAmount) {
+            setSelectedIngredientAndAmount((prevPairs) => [...prevPairs, { ingredient: ingredient, amount: Number(ingredientAmount) }]);
+            setIngredientsAndAmountsForDto((prevPairs) => [...prevPairs, { ingredientId: ingredient.id, amount: Number(ingredientAmount) }])
+            console.log(ingredientsAndAmountsForDto)
 
-
-            setIngredientId('');
+            setIngredient('');
             setIngredientAmount('');
         }
+    };
+
+    const handleRemovePair = (index) => {
+        setSelectedIngredientAndAmount((prev) => prev.filter((_, i) => i !== index));
+        setIngredientsAndAmountsForDto((prev) => prev.filter((_, i) => i !== index));
     };
 
     return <>
@@ -90,10 +94,6 @@ const NewRecipe = () => {
                                 alignItems: "center",
                             }}
                         >
-                            {/* <Typography variant="h6">
-                                Please enter the values of the new recipe.
-                            </Typography> */}
-
                             <TextField
                                 fullWidth
                                 required
@@ -112,6 +112,22 @@ const NewRecipe = () => {
                             <TextField
                                 fullWidth
                                 required
+                                type="number"
+                                id="outlined-prepTime-input"
+                                label="PreparationTime"
+                                placeholder="PreparationTime"
+                                error={preparationTimeError}
+                                helperText={preparationTimeError}
+                                onChange={(e) => {
+                                    setPreparationTime(e.target.value);
+                                    if (e.target.value !== '')
+                                        setPreparationTimeError("");
+                                    else setPreparationTimeError(errorMessageTemplate + " prep time.");
+                                }}
+                            />
+                            <TextField
+                                fullWidth
+                                required
                                 id="outlined-quantity-input"
                                 label="Quantity"
                                 placeholder="Quantity"
@@ -125,138 +141,85 @@ const NewRecipe = () => {
                                 }}
                             />
 
-                            <FormControl
-                                sx={{ width: "100%", marginBottom: "15px" }}
-                                error={authorIdError}
-                            >
-                                <InputLabel id="demo-select-small-label">Author</InputLabel>
-                                <Select
-                                    labelId="demo-select-small-label"
-                                    id="author-select"
-                                    label="Author"
-                                    required
-                                    onChange={(e) => {
-                                        setAuthorId(e.target.value);
-                                        if (e.target.value == 0) {
-                                            setAuthorIdError(true);
-                                        } else {
-                                            setAuthorIdError(false);
-                                        }
-                                    }}
-                                    value={authorId}
-                                >
-                                    <MenuItem value={0}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {authors.map((a) => (
-                                        <MenuItem value={a.id}> {a.username}</MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText>{authorIdError}</FormHelperText>
-                            </FormControl>
-
-                            {/* <FormControl sx={{ width: "100%" }} error={ingredientIdsError}>
-                                <Stack direction='column'>
-                                     <Typography> Ingredients</Typography> 
-
-                                    <Stack direction='row'>
-                                        {ingredientIds.map((a, ii) => (
-                                            <Chip
-                                                label={a}
-                                                onDelete={() => {
-                                                    const a = ingredientIds.filter((v, i) => i !== ii);
-                                                    setIngredientIds(a);
-                                                }}
-                                            />
-                                        ))}
-                                    </Stack>
-
-                                    <Stack direction='row' sx={{ width: '110%' }}>
-                                        <Autocomplete
-                                            options={ingredients.filter((a) =>
-                                                ingredientIds.every((vv) => vv !== a.name)
-                                            )}
-                                            getOptionLabel={(a) => a.name}
-                                            renderInput={(params) => <TextField {...params} />}
-                                            sx={{ width: "90%" }}
-                                            value={selectedIngredientId}
-                                            onChange={(e, v) => setSelectedIngredientId(v)}
-                                        />
-                                    </Stack>
-                                    <Stack direction='row' sx={{ width: '100%' }}>
-                                        <Button
-                                            disabled={selectedIngredientId === null}
-                                            onClick={() => {
-                                                if (selectedIngredientId != null) {
-                                                    let a = ingredientIds;
-                                                    a.push(selectedIngredientId.id);
-                                                    setIngredientIds(a);
-                                                    setSelectedIngredientId(null);
+                            <Grid container alignItems="center" spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth error={ingredientError}>
+                                        <InputLabel id="ingredient-select-label">Ingredient</InputLabel>
+                                        <Select
+                                            labelId="ingredient-select-label"
+                                            id="ingredient-select"
+                                            label="Ingredient"
+                                            required
+                                            onChange={(e) => {
+                                                setIngredient(e.target.value);
+                                                if (e.target.value !== 0) {
+                                                    setIngredientError(false);
+                                                } else {
+                                                    setIngredientError(errorMessageTemplate + " ingredient.");
                                                 }
                                             }}
+                                            value={ingredient}
                                         >
-                                            Add ingredient
-                                        </Button>
-                                    </Stack>
-                                </Stack>
-                            </FormControl> 
-
-                            <Button
-                                onClick={save}
-                                disabled={
-                                    titleError ||
-                                    quantityError ||
-                                    authorIdError ||
-                                    ingredientIdsError
-                                }
-                            >
-                                Save
-                            </Button>
-                            <FormHelperText error={globalError}>{globalError}</FormHelperText> */}
-                            <Grid>
-                                <Select
-                                    sx={{ width: '80%' }}
-                                    value={ingredientId}
-                                    error={ingredientIdError}
-                                    onChange={
-                                        (e) => {
-                                            setIngredientId(e.target.value);
-                                            if (e.target.value !== 0) {
-                                                setIngredientIdError(0);
-                                            } else {
-                                                setIngredientIdError(errorMessageTemplate + " ingredient id.")
+                                            <MenuItem value={0}>
+                                                <em>None</em>
+                                            </MenuItem>
+                                            {ingredients.map((a) => (
+                                                <MenuItem key={a.id} value={a}>{a.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <TextField
+                                        error={ingredientAmountError}
+                                        fullWidth
+                                        type="number"
+                                        value={ingredientAmount}
+                                        onChange={(e) => {
+                                            if (e.target.value < 0) e.target.value = 0;
+                                            else if (e.target.value === 0) setIngredientAmountError(errorMessageTemplate + "ingredient amount.");
+                                            else {
+                                                setIngredientAmount(e.target.value)
+                                                setIngredientAmountError(false);
                                             }
-                                        }
-                                    }
-                                >
-                                    <MenuItem value={0}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {ingredients.map((a) => (
-                                        <MenuItem value={a.id}> {a.name}</MenuItem>
-                                    ))}
-                                </Select>
-                                <TextField
-                                    sx={{ width: '20%' }}
-                                    type="number"
-                                    value={ingredientAmount}
-                                    onChange={(e) => setIngredientAmount(e.target.value)}
-                                    placeholder="Amount"
-                                />
-                                <Button onClick={handleAddPair}>Add ingredient</Button>
+                                        }}
+                                        placeholder="Amount"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={2}>
+                                    <Button fullWidth onClick={handleAddPair}>Add</Button>
+                                </Grid>
                             </Grid>
-                            <Grid>
-                                <h3>Selected ingredients:</h3>
-                                <ul>
-                                    {selectedIngredientIdAndAmount.map((pair, index) => (
-                                        <li key={index}>
-                                            IngredientId: {pair.ingredientId}, Amount: {pair.amount}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </Grid>
+
+                            {selectedIngredientAndAmount.length > 0 && (
+                                <Grid item xs={12} md={6}>
+                                    <Box sx={{
+                                        display: 'flex',
+                                        gap: '10px',
+                                        flexDirection: 'column',
+                                        alignItems: "center",
+                                    }}>
+                                        <Typography variant="h6" gutterBottom>
+                                            Selected ingredients:
+                                        </Typography>
+                                        <List sx={{ padding: 0 }}>
+                                            {selectedIngredientAndAmount.map((pair, index) => (
+                                                <Chip
+                                                    key={index}
+                                                    label={`${pair.ingredient.name}, Amount: ${pair.amount}`}
+                                                    onDelete={() => handleRemovePair(index)}
+                                                    deleteIcon={<DeleteIcon />}
+                                                    variant="outlined"
+                                                    sx={{ marginBottom: '5px' }}
+                                                />
+                                            ))}
+                                        </List>
+                                    </Box>
+                                </Grid>
+                            )}
                         </Box>
                     </Grid>
+
                     <Grid item xs={12} md={6}>
                         <Box
                             sx={{
@@ -268,7 +231,7 @@ const NewRecipe = () => {
                         >
                             <TextField
                                 multiline
-                                minRows='5'
+                                minRows={5}
                                 fullWidth
                                 required
                                 id="outlined-description-input"
@@ -285,7 +248,7 @@ const NewRecipe = () => {
                             />
                             <TextField
                                 multiline
-                                minRows='5'
+                                minRows={5}
                                 fullWidth
                                 required
                                 id="outlined-guide-input"
@@ -301,6 +264,9 @@ const NewRecipe = () => {
                                 }}
                             />
                         </Box>
+                        <Button sx={{ marginTop: '15px' }} variant="contained" color="primary" onClick={save}>
+                            Save
+                        </Button>
                     </Grid>
                 </Grid>
             </form>

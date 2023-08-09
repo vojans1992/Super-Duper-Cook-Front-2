@@ -10,6 +10,7 @@ import ShowRecipes from './Recipes/ShowRecipes'
 import NewRecipe from './Recipes/NewRecipe'
 import ShowUsers from './User/ShowUsers';
 import UserForm from './User/UserForm';
+import EditUser from './User/EditUser';
 
 const router = createBrowserRouter([
   {
@@ -67,18 +68,61 @@ const router = createBrowserRouter([
   },
   {
     path: "users",
-    element: <ShowUsers/>,
+    element: <ShowUsers />,
     loader: async () => {
       return fetch("http://localhost:8080/api/v1/users");
     }
   },
   {
     path: "users/new_user",
-    element: <UserForm/>,
-    loader: async () => {
-      return fetch("http://localhost:8080/user");
+    element: <UserForm />
+  },
+  {
+    path: "users/:id",
+    element: <EditUser />,
+    loader: async ({ params }) => {
+
+      return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": JSON.parse(localStorage.getItem('user')).token,
+          "Accept": "application/json"
+        },
+
+      });
+    },
+    action: async ({ params, request }) => {
+
+      if (request.method === 'DELETE') {
+        return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+          method: 'DELETE',
+          mode: 'cors',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token,
+            "Accept": "application/json"
+          },
+        }
+        );
+      } else if (request.method === 'PUT') {
+        let data = Object.fromEntries(await request.formData());
+        data.users = JSON.parse(data.users);
+        console.log(JSON.stringify(data, null, 4));
+        return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
+          method: 'PUT',
+          mode: 'cors',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token,
+            "Accept": "application/json"
+          },
+        });
+      }
     }
   },
+
 
 
 

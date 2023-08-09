@@ -1,9 +1,10 @@
+import { Navigation } from "@mui/icons-material";
 import { Box, Button, Container, FormControl, FormHelperText, InputLabel, MenuItem, Rating, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 const EditUser = () => {
-    const navvigate =useNavigate();
+    const navigate = useNavigate();
     const user = useLoaderData();
     const [username,setUsername] = useState(user.username);
     const [password, setPassword] = useState(user.password);
@@ -28,8 +29,11 @@ const EditUser = () => {
         };
         let respons = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
             method:"PUT",
+            mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": JSON.parse(localStorage.getItem('users')).token,
+                "Accept": "application/json"
             },
             body: JSON.stringify(new_user),
         });
@@ -41,6 +45,7 @@ const EditUser = () => {
             Navigation("/users");
         } else {
             console.log("Changes are unsuccessful");
+
 
         }
     };

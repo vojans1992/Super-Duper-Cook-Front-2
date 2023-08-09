@@ -2,15 +2,17 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Box, Button, Container, Grid, TextField } from "@mui/material";
-import{CardMedia,CardActions,CardContent,Card,CardHeader,Stack} from"@mui/material";
+import { Grid, IconButton, Tooltip } from "@mui/material";
+import { CardMedia, CardActions, CardContent, Card, CardHeader, Stack } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
 
 const ShowUser = (user, onDelete) => {
+    console.log(user.user)
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
-//    const [user, setUser] = useState(user.username);
- //   const [password, setPassword] = useState(user.password);
+    //  const [user, setUser] = useState(null);
+    //   const [password, setPassword] = useState(user.password);
 
 
     const logout = () => {
@@ -20,10 +22,13 @@ const ShowUser = (user, onDelete) => {
     }
     const deleteUser = async () => {
 
-        let response = await fetch("http://localhost:8080/api/v1/users/${user.id}", {
+        let response = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
             method: "DELETE",
+            mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": JSON.parse(localStorage.getItem('user')).token,
+                "Accept": "application/json"
 
             },
         });
@@ -41,13 +46,13 @@ const ShowUser = (user, onDelete) => {
 
     return (
         <Grid item xs={4}>
-            <Card sx={{ maxWidth: 345 }} variant="outlined">
+            <Card sx={{ maxWidth: 350 }} variant="outlined">
                 <CardHeader
                     sx={{ display: "flex", textAlign: "center" }}
                     title={user.username}
                 />
                 <CardMedia
-                    sx={{ height: 240 }}
+                    sx={{ height: 140 }}
                     image="https://cdn.pixabay.com/photo/2013/07/13/12/07/avatar-159236_960_720.png"
                     title={user.picture}
                 />
@@ -63,27 +68,38 @@ const ShowUser = (user, onDelete) => {
                             Username:
                         </Grid>
                         <Grid item xs={6}>
-                            {user.username}
+                            {user.user.username}
                         </Grid>
                         <Grid item xs={6} >
                             Password:
                         </Grid>
                         <Grid item xs={6}>
-                            {user.password}
+                            {user.user.password}
                         </Grid>
                     </Grid>
                 </CardContent>
                 <CardActions sx={{ display: "flex", justifyContent: "center" }}>
                     <Stack direction="row" spacing={2}>
-                        <Button color="secondary" onClick={() => navigate(`edit_user/${user.id}`)} >Edit </Button>
-                        <Button variant="outlined" color="error" onClick={deleteUser} >
-                            Delete
-                        </Button>
+                        <Tooltip title="Edit">
+                            <IconButton onClick={e => {
+                                navigate(`/users/${user.id}`);
+                            }}>
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Delete">
+                            <IconButton aria-label="delete" onClick={deleteUser}>
+                                <Delete />
+                            </IconButton>
+                        </Tooltip>
+
+
                     </Stack>
                 </CardActions>
             </Card>
         </Grid>
-    );   
+    );
 
 };
 

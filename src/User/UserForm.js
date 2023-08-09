@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material";
-import { Box, Button, Container, Grid, TextField } from "@mui/material";
-import Container from "@mui/material";
+import  { TextField, FormHelperText } from "@mui/material";
+import { Box, Button, Container  } from "@mui/material";
+
 
 const UserForm = () => {
     const [username, setUsername] = useState("");
@@ -10,15 +10,15 @@ const UserForm = () => {
     const [role, setRole] = useState("");
 
     const [globalError, setGlobalError] = useState(false);
-    const errorMessageTempalte = "Please fill in the blanks ";
+    const errorMessageTempalate = "Please fill in the blanks ";
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [roleError, setRoleError] = useState("");
 
-    const [user, setUser] = useState(null);
+ //   const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-
+/*
     useEffect(() => {
         const u = localStorage.getItem("user");
         if (u) {
@@ -26,30 +26,34 @@ const UserForm = () => {
             setIsLogin(true);
         }
     }, [isLogin])
+    */
 
     const save = async () => {
+    
         if (username == '0' || password == '' || role == '') {
             setGlobalError("Please fill in the blanks.");
             return;
         }
         const new_user = {
             username: username,
-            password: password,
-            role: role
+            password: password
         };
 
-        let respons = await fetch("http://localhost:8080/user", {
+        let response = await fetch("http://localhost:8080/api/v1/users", {
             method: "POST",
+            mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": JSON.parse(localStorage.getItem('user')).token,
+                "Accept": "application/json"
             },
             body: JSON.stringify(new_user),
         });
-        console.log(respons);
-        if (respons.ok) {
-            let u = await respons.json();
+        console.log(response);
+        if (response.ok) {
+            let u = await response.json();
             alert("You have successfully registered");
-            navigate("/user");
+            navigate("/users");
         } else {
             console.log("Adding user failed.");
         }
@@ -68,7 +72,7 @@ const UserForm = () => {
             }}
             noValidate
             autoComplete="off">
-            <TextField>
+            <TextField
                 sx={{ width: "100%" }}
                 fullWidth
                 required
@@ -79,34 +83,35 @@ const UserForm = () => {
                 helperText= {usernameError}
                 onChange={(e) => {
                     setUsername(e.target.value);
+                    console.log(username)
                     if (e.target.value === "")
                         setUsernameError(
-                            errorMessageTemplate +
+                            errorMessageTempalate+
                             "correct username."
                         );
                     else setUsernameError("");
                 }}
-            </TextField>
-            <TextField>
+            />
+            <TextField
                 sx={{ width: "100%" }}
                 fullWidth
                 required
                 id="outlined-required"
                 label="Password"
                 placeholder="Password"
-                error={passwordErrorError}
+                error={passwordError}
                 helperText= {passwordError}
                 onChange={(e) => {
                     setPassword(e.target.value);
                     if (e.target.value === "")
                         setPasswordError(
-                            errorMessageTemplate +
+                            errorMessageTempalate +
                             "correct password."
                         );
                     else setPasswordError("");
                 }}
-            </TextField>
-            <TextField>
+            />
+            <TextField
                 sx={{ width: "100%" }}
                 fullWidth
                 required
@@ -119,13 +124,13 @@ const UserForm = () => {
                     setRole(e.target.value);
                     if (e.target.value === "")
                         setRoleError(
-                            errorMessageTemplate +
+                            errorMessageTempalate +
                             "correct role."
                         );
                     else setRoleError("");
                 }}
-            </TextField>
-            <Button variant="contained"
+            />
+            <Button variant="contained" 
                 onClick={save}
                 disabled={
                     usernameError || passwordError || roleError

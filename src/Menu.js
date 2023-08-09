@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Typography, Button } from '@mui/material';
@@ -9,7 +9,9 @@ import './App.css';
 
 
 const Menu = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  let user2 = JSON.parse(localStorage.getItem('user'))
 
   useEffect(() => {
     let ignore = false;
@@ -23,7 +25,7 @@ const Menu = () => {
           return;
         }
         const token = JSON.parse(localStorage.getItem('user')).token;
-        const response = await fetch('http://localhost:8080/api/v1/users', {
+        const response = await fetch(`http://localhost:8080/api/v1/users`, {
           method: 'GET',
           mode: 'cors',
           headers: {
@@ -50,7 +52,7 @@ const Menu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    window.location.reload();
+    navigate('/')
   };
 
   const ColorButton = styled(Button)(({ theme }) => ({
@@ -62,13 +64,11 @@ const Menu = () => {
   }));
 
   return (
+    
     <div className={styles.menu}>
       <ul>
         <li>
           <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/">Contact us</Link>
         </li>
         <li>
           <Link to="/ingredients">Ingredients</Link>
@@ -80,10 +80,9 @@ const Menu = () => {
           <Link to="/users">Users</Link>
         </li>
         <li>
-          {user ? (
+          {user2 ? (
             <div className="textMenu">
-              {/* {`Hello, ${user.username}`} */}
-              Hello!
+              {`Hello, ${user2.user}`}
               <ColorButton variant="outlined" onClick={handleLogout}>
                 Logout
               </ColorButton>

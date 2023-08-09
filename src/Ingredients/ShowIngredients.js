@@ -75,7 +75,7 @@ const ShowIngredients = () => {
                             <TableCell>{i.protein}</TableCell>
                             <TableCell> {i.allergens.map((a) => <MenuItem value={a.name}> {a.name} </MenuItem>)} </TableCell>
 
-                            <TableCell>
+                            {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <TableCell>
                                 <Stack direction='row'>
                                     <IconButton onClick={async (e) => {
                                         fetcher.submit({}, {
@@ -93,7 +93,7 @@ const ShowIngredients = () => {
                                         <Edit />
                                     </IconButton>
                                 </Stack>
-                            </TableCell>
+                            </TableCell> : <></>}
                         </TableRow>)}
                     </TableBody>
                 </Table>

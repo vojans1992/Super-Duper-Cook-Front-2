@@ -35,6 +35,8 @@ const NewRecipe = () => {
     const navigate = useNavigate();
 
     const save = async () => {
+        console.log(JSON.parse(localStorage.getItem('user')))
+        
 
         if (title == '' || description == '' || guide == '' || preparationTime == 0 || quantity == '' || selectedIngredientAndAmount.size == 0) {
             setGlobalError('Please fill all fields in the form');
@@ -46,13 +48,14 @@ const NewRecipe = () => {
             'guide': guide,
             'preparationTime': preparationTime,
             'quantity': quantity,
-            'authorUsername': localStorage.getItem('user').username,
+            'authorUsername': JSON.parse(localStorage.getItem('user')).user,
             'ingredientIds': ingredientsAndAmountsForDto
         };
         let response = await fetch('http://localhost:8080/api/v1/recipes', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization' : JSON.parse(localStorage.getItem('user')).token
             },
             body: JSON.stringify(new_recipe)
         });

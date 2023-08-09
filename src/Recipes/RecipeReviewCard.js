@@ -22,8 +22,10 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
     try {
       const response = await fetch(`http://localhost:8080/api/v1/recipes/${recipe.id}`, {
         method: 'DELETE',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization' : JSON.parse(localStorage.getItem('user')).token
           // Dodajte potrebne headere za autorizaciju ili autentifikaciju
         },
       });
@@ -46,6 +48,57 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
+    if(isFavorite === false) setAsFav();
+    if(isFavorite === true) removeAsFav();
+  };
+
+  const removeAsFav = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/recipes/removeAsFav?recipeId=${recipe.id}&username=${JSON.parse(localStorage.getItem('user')).user}`, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : JSON.parse(localStorage.getItem('user')).token
+          // Dodajte potrebne headere za autorizaciju ili autentifikaciju
+        },
+      });
+    }catch (error) {
+      console.error('Error removing from favourites:', error);
+    }
+  }
+
+  const setAsFav = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/recipes/addToFav?recipeId=${recipe.id}&username=${JSON.parse(localStorage.getItem('user')).user}`, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : JSON.parse(localStorage.getItem('user')).token
+          // Dodajte potrebne headere za autorizaciju ili autentifikaciju
+        },
+      });
+    }catch (error) {
+      console.error('Error adding to favourites:', error);
+    }
+  }
+
+  const FetchIngredients = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/ratios/byRecipeId/${recipe.id}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization' : JSON.parse(localStorage.getItem('user')).token
+          // Dodajte potrebne headere za autorizaciju ili autentifikaciju
+        },
+      });
+
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+    }
   };
 
   return (
@@ -65,7 +118,7 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleDelete}>Delete</Button>
+        {((JSON.parse(localStorage.getItem('user')).role) === "ROLE_ADMIN") ? <Button size="small" onClick={handleDelete}>Delete</Button> : <></>}
         <Button size="small" onClick={handleLearnMore}>Learn More</Button>
         <FavoriteButton
           size="small"

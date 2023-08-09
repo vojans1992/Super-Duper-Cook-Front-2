@@ -2,34 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //import './App.css';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Menu from './Menu'
 
-const Menu = () => {
-  return (
-    <div className="menu">
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/">Contact us</Link>
-        </li>
-        <li>
-          <Link to="/ingredients">Ingredients</Link>
-        </li>
-        <li>
-          <Link to="/recipes">Recipes</Link>
-        </li>
-        <li>
-          <Link to="/users">User</Link>
-        </li>
-        {/* Dodajte Link oko ikonice za prelazak na stranicu za login */}
-        <Link to="/login">
-          <AccountCircleIcon className="menu-icon" />
-        </Link>
-      </ul>
-    </div>
-  );
-};
 
 function App()  {
   return (

@@ -5,29 +5,11 @@ import { Card, CardContent, Typography } from '@mui/material';
 
 
 const RecipeDetails = () => {
-  const recipe = useLoaderData();
-  const ingredients = useState([]);
+  const recipe = useLoaderData()[0];
+  const ingredients = useLoaderData()[1]
 
 
-  const FetchIngredients = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/v1/ratios/byRecipeId/${recipe.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Dodajte potrebne headere za autorizaciju ili autentifikaciju
-        },
-      });
-
-
-        ingredients = response.json();
-
-
-    } catch (error) {
-      console.error('Error deleting recipe:', error);
-    }
-  };
-  FetchIngredients()
+  
   const cardStyle = {
     maxWidth: 400,
     margin: '0 auto',
@@ -62,7 +44,7 @@ const RecipeDetails = () => {
   return (
     <>
       <Menu />
-      {console.log(recipe)}
+      {console.log(ingredients)}
       <Card style={cardStyle}>
         <CardContent>
           <Typography variant="h4" style={headingStyle}>
@@ -100,7 +82,7 @@ const RecipeDetails = () => {
           </Typography>
 
           <Typography variant="body1" style={attributeStyle}>
-            <strong>Sastojci:</strong> {ingredients.map((e) => (e.name))}
+            <strong>Sastojci:</strong> {ingredients.map((e) => (e.ingredient.name) + " " + e.amount + ", " )}
           </Typography>
 
           <Typography variant="body1" style={guideStyle}>

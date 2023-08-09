@@ -15,6 +15,10 @@ import ShowUsers from './User/ShowUsers';
 import EditUser from './User/EditUser';
 import UserForm from './User/UserForm';
 import RecipeDetails from './Recipes/RecipeDetails';
+import ChooseAllergens from './Allergens/ChooseAllergens';
+import AddNewAllergen from './Allergens/AddNewAllergen';
+import ShowAllergens from './Allergens/ShowAllergens';
+
 
 const ErrorDisplay = ({ entity }) => {
   const error = useRouteError();
@@ -72,6 +76,14 @@ const loadUsers = async () => {
   return response;
 };
 
+const loadRecipes = async () => {
+  const response = await fetch(`${API_BASE_URL}/recipes`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  return response;
+};
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -80,21 +92,23 @@ const router = createBrowserRouter([
   {
     path: "recipes",
     element: <ShowRecipes />,
-    loader: async () => {
-      return fetch('http://localhost:8080/api/v1/recipes');
-    },
+    loader: loadRecipes
   },
   {
     path: "recipes/new_recipe",
     element: <NewRecipe />,
     loader: async () => {
-      const ingredients_a = await fetch('http://localhost:8080/api/v1/ingredients');
+      const ingredients_a = await fetch('http://localhost:8080/api/v1/ingredients', {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': JSON.parse(localStorage.getItem('user')).token
+        }
+      });
       const ingredients = await ingredients_a.json();
 
-      const authors_a = await fetch('http://localhost:8080/api/v1/cook');
-      const authors = await authors_a.json();
-
-      return [ingredients, authors];
+      return [ingredients];
     },
   },
   {
@@ -132,9 +146,28 @@ const router = createBrowserRouter([
     path: "recipes/:id",
     element: <RecipeDetails />, // Koristićemo novu komponentu za prikaz detalja recepta
     loader: async ({ params }) => {
-      const response = await fetch(`http://localhost:8080/api/v1/recipes/${params.id}`);
-      const recipe = await response.json();
-      return recipe;
+      const recipe_r = await fetch(`http://localhost:8080/api/v1/recipes/${params.id}`, {
+        method: 'GET',
+
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': JSON.parse(localStorage.getItem('user')).token,
+        }
+      });
+      const recipe = await recipe_r.json();
+
+      const ingredients_r = await fetch(`http://localhost:8080/api/v1/ratios/byRecipeId/${params.id}`, {
+        method: 'GET',
+
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': JSON.parse(localStorage.getItem('user')).token,
+        }
+      });
+      const ingredients = await ingredients_r.json();
+
+
+      return [recipe, ingredients];
     },
   },
 
@@ -237,9 +270,9 @@ const router = createBrowserRouter([
         }
         );
       } else if (request.method === 'PUT') {
-         let data = Object.fromEntries(await request.formData());
-         data.users = JSON.parse(data.users);
-         console.log(JSON.stringify(data, null, 4));
+        let data = Object.fromEntries(await request.formData());
+        data.users = JSON.parse(data.users);
+        console.log(JSON.stringify(data, null, 4));
         return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
           method: 'PUT',
           mode: 'cors',
@@ -254,7 +287,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/myallergens',
-    element: <ChooseAllergens></ChooseAllergens>,
+    element: <ChooseAllergens />,
     loader:
       async () => {
         return await fetch('http://localhost:8080/api/v1/allergens', {

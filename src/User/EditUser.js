@@ -8,7 +8,7 @@ const EditUser = () => {
     const user = useLoaderData();
     const [username,setUsername] = useState(user.username);
     const [password, setPassword] = useState(user.password);
-    const [role, serRole] = useState(user.role);
+    const [role, setRole] = useState(user.role);
     const [globalError,setGlobalError] = useState(false);
     const errorMessageTemplate = "Please fill ";
     const [usernameError,setUsernameError] = useState("");
@@ -27,7 +27,7 @@ const EditUser = () => {
             password: password,
             role: role
         };
-        let respons = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
+        let response = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
             method:"PUT",
             mode: 'cors',
             headers: {

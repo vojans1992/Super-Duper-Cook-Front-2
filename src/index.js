@@ -14,6 +14,7 @@ import ShowIngredients from './Ingredients/ShowIngredients';
 import ShowUsers from './User/ShowUsers';
 import EditUser from './User/EditUser';
 import UserForm from './User/UserForm';
+import RecipeDetails from './Recipes/RecipeDetails';
 
 const ErrorDisplay = ({ entity }) => {
   const error = useRouteError();
@@ -127,6 +128,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorDisplay entity="sastojaka." />,
     loader: loadIngredients
   },
+  {
+    path: "recipes/:id",
+    element: <RecipeDetails />, // Koristićemo novu komponentu za prikaz detalja recepta
+    loader: async ({ params }) => {
+      const response = await fetch(`http://localhost:8080/api/v1/recipes/${params.id}`);
+      const recipe = await response.json();
+      return recipe;
+    },
+  },
+
+
   {
     path: 'ingredients/new_ingredient',
     element: <NewIngredient />,

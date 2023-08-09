@@ -36,9 +36,6 @@ export default function ChooseAllergens() {
       return result[0].icon
     }
 
-    
-    //to do: ovaj poziv prosledjivati kao parametar u ChooseAllergens
-    //da bi se ista forma koristila za dodavanje alergena sastojku i useru 
     const handleClick = async () => {
 
         console.log("za slanje " + JSON.stringify(selectedAllergens));
@@ -46,7 +43,7 @@ export default function ChooseAllergens() {
         const result = await fetch("http://localhost:8080/api/v1/users/19/allergens", {
 
         method: "POST",
-        mode : "cors",
+        //mode : "cors",
         credentials: "same-origin",
           headers: { 
             Accept:"application/json",

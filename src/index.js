@@ -10,6 +10,7 @@ import ShowRecipes from './Recipes/ShowRecipes'
 import NewRecipe from './Recipes/NewRecipe'
 import ChooseAllergens from './Allergens/ChooseAllergens';
 import AddNewAllergen from './Allergens/AddNewAllergen';
+import ShowAllergens from './Allergens/ShowAllergens';
 
 const router = createBrowserRouter([
   {
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
     element: <Login />, // Koristimo komponentu Login za ovu rutu
   },
   {
-    path: '/allergens',
+    path: '/myallergens',
     element: <ChooseAllergens></ChooseAllergens>,
     loader: 
       async () => {
@@ -79,9 +80,22 @@ const router = createBrowserRouter([
       }
   },
   {
-    path: '/add_new_allergen', 
+    path: 'allergens/add_new_allergen', 
     element: <AddNewAllergen/>
-  }
+  },
+  {
+    path: '/allergens',
+    element: <ShowAllergens></ShowAllergens>,
+    loader: 
+      async () => {
+        return await fetch('http://localhost:8080/api/v1/allergens', {
+          headers: {
+            Accept:"application/json",
+            "Content-Type": "application/json"
+        }});
+        
+      }
+  },
   
 ]);
 

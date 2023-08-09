@@ -17,6 +17,8 @@ import {
   
   const AddNewAllergen = () => {
 
+    const navigate = useNavigate();
+
     const [icons, setIcons] = useState([]);
 
     const [name, setName] = useState("");
@@ -40,8 +42,6 @@ import {
         icon: selectedIcon
       };
 
-      console.log("sanja " + JSON.stringify(new_allergen));
-
       const result = await fetch("http://localhost:8080/api/v1/allergens", {
         method: "POST",
         mode : "cors",
@@ -58,7 +58,7 @@ import {
         let d = await result.json();
         console.log(JSON.stringify(d));
         alert("Allergen added successfully ");
-        //navigate("/subjects")
+        navigate("/allergens");
       } else {
         console.log("Failed to add new allergen");
       }

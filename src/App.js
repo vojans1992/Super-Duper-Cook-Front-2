@@ -6,6 +6,7 @@ import Menu from './Menu'
 
 
 function App()  {
+  localStorage.setItem('user')
   return (
     <div className="home-background"> {/* Primena klase za pozadinu */}
       <div className="header">

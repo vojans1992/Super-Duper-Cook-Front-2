@@ -3,6 +3,7 @@ import { Box, Container, TextField, FormHelperText, Button, Autocomplete, Stack,
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import DeleteIcon from '@mui/icons-material/Delete';
+import Menu from '../Menu';
 
 const NewRecipe = () => {
 
@@ -82,6 +83,7 @@ const NewRecipe = () => {
     };
 
     return <>
+    <Menu/>
         <Container maxWidth="md" sx={{ paddingTop: "15px" }}>
             <form>
                 <Grid container spacing={2}>

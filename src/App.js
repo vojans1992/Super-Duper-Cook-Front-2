@@ -33,7 +33,7 @@ const Menu = () => {
 
 function App()  {
   return (
-    <div>
+    <div className="home-background"> {/* Primena klase za pozadinu */}
       <div className="header">
         <Menu />
         <div className="title">
@@ -41,6 +41,8 @@ function App()  {
           Make You Feel<br />
           Awesome
         </div>
+      <br/>
+     
       </div>
       <div className='text'>
         <p>Welcome to our oasis of flavor! Indulge in irresistible dishes<br/> that will take you on a culinary journey like no other.<br/>
@@ -50,6 +52,7 @@ function App()  {
       <div className="button-container">
         <button className="menu-button">View Our Menu</button>
       </div>
+      
     </div>
   );
 }

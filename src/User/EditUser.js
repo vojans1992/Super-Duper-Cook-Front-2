@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 const EditUser = () => {
+
     const navigate = useNavigate();
     const user = useLoaderData();
-    const [username,setUsername] = useState(user.username);
+    const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState(user.password);
     const [role, setRole] = useState(user.role);
-    const [globalError,setGlobalError] = useState(false);
+    const [globalError, setGlobalError] = useState(false);
     const errorMessageTemplate = "Please fill ";
-    const [usernameError,setUsernameError] = useState("");
-    const [passwordError,setPasswordError] = useState("");
-    const [roleError,setRoleError] = useState("");
-
+    const [usernameError, setUsernameError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [roleError, setRoleError] = useState("");
 
 
     const update = async () => {
@@ -28,11 +28,11 @@ const EditUser = () => {
             role: role
         };
         let response = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
-            method:"PUT",
+            method: "PUT",
             mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": JSON.parse(localStorage.getItem('users')).token,
+                "Authorization": JSON.parse(localStorage.getItem('user')).token,
                 "Accept": "application/json"
             },
             body: JSON.stringify(new_user),
@@ -42,26 +42,25 @@ const EditUser = () => {
             let u = await response.json();
             console.log(JSON.stringify(u));
             alert("Successfull made the change");
-            Navigation("/users");
+            navigate("/users");
         } else {
-            console.log("Changes are unsuccessful");
-
+            console.log("Changes are unsuccessful.");
 
         }
     };
     return (
         <Container maxWidth="sm">
             <Box
-            component="form"
-            sx={{
-                display: "flex",
-                gap: "10px",
-                "flex-direction": "column",
-                "align-items": "center",
-                "& .MuiTextField-root": { m: 1, width: "100%" },
-            }}
-            noValidate
-            autoComplete="off"
+                component="form"
+                sx={{
+                    display: "flex",
+                    gap: "10px",
+                    "flex-direction": "column",
+                    "align-items": "center",
+                    "& .MuiTextField-root": { m: 1, width: "100%" },
+                }}
+                noValidate
+                autoComplete="off"
             >
                 <TextField
                     sx={{ width: "100px" }}
@@ -82,7 +81,7 @@ const EditUser = () => {
                         else setUsernameError("");
                     }}
                 />
-                 <TextField
+                <TextField
                     sx={{ width: "100px" }}
                     fullWidth
                     required
@@ -101,7 +100,7 @@ const EditUser = () => {
                         else setPasswordError("");
                     }}
                 />
-                 <TextField
+                <TextField
                     sx={{ width: "100px" }}
                     fullWidth
                     required

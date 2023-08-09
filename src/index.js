@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import IngredientList from './IngredientList';
 import Login from './Login'; // Importujemo komponentu za stranicu za login
@@ -11,6 +11,9 @@ import NewRecipe from './Recipes/NewRecipe'
 import ShowUsers from './User/ShowUsers';
 import UserForm from './User/UserForm';
 import EditUser from './User/EditUser';
+import ChooseAllergens from './Allergens/ChooseAllergens';
+import AddNewAllergen from './Allergens/AddNewAllergen';
+import ShowAllergens from './Allergens/ShowAllergens';
 
 const router = createBrowserRouter([
   {
@@ -63,8 +66,8 @@ const router = createBrowserRouter([
     },
   },
   {
-    path: '/login', // Putanja za stranicu za login
-    element: <Login />, // Koristimo komponentu Login za ovu rutu
+    path: '/login',
+    element: <Login />,
   },
   {
     path: "users",
@@ -122,9 +125,38 @@ const router = createBrowserRouter([
       }
     }
   },
+  {
+    path: '/myallergens',
+    element: <ChooseAllergens></ChooseAllergens>,
+    loader:
+      async () => {
+        return await fetch('http://localhost:8080/api/v1/allergens', {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        });
 
+      }
+  },
+  {
+    path: 'allergens/add_new_allergen',
+    element: <AddNewAllergen />
+  },
+  {
+    path: '/allergens',
+    element: <ShowAllergens></ShowAllergens>,
+    loader:
+      async () => {
+        return await fetch('http://localhost:8080/api/v1/allergens', {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        });
 
-
+      }
+  },
 
 ]);
 

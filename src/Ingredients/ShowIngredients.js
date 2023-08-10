@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLoaderData, useFetcher, useNavigate } from "react-router-dom";
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem } from "@mui/material";
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, AppBar, Toolbar, Typography } from "@mui/material";
 import { Container, Box, Button, TextField, FormControl, Stack } from "@mui/material";
 import { Delete, Edit, Home } from "@mui/icons-material";
 import Pagination from '@mui/material/Pagination';
@@ -32,21 +32,31 @@ const ShowIngredients = () => {
     const currentIngredients = filteredIngredients.slice(startIndex, endIndex);
 
 
-    return <div className="ingredient-container">     
+    return <div className="ingredient-container">
         <Container>
-            <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <IconButton onClick={() => { navigation('/') }}>
-                            <Home />
-                        </IconButton>
-                <FormControl sx={{ width: "100%" }}>
-                    <TextField placeholder="Search..." value={q} onChange={e => setQ(e.target.value)} sx={{ flexGrow: 1 }} />
-                </FormControl>
-                </Box>
 
-                {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button> : <></>}
-            </Box>
-            <TableContainer component={Paper}  sx={{ width: "100%", backgroundColor: "lightcyan" }}>
+            <AppBar position="static" color="transparent" sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                <Toolbar>
+                    <IconButton onClick={() => { navigation('/') }} color="inherit">
+                        <Home />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Ingredients
+                    </Typography>
+                    <FormControl sx={{ width: "65%", mr: 2 }}>
+                        <TextField placeholder="Search..." value={q} onChange={e => setQ(e.target.value)} sx={{ width: "30%", flexGrow: 1 }} />
+                    </FormControl>
+                    {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? (
+                        <Button variant="contained" onClick={() => { navigation('new_ingredient') }} sx={{ ml: 2 }}>
+                            Add New Ingredient
+                        </Button>
+                    ) : (
+                        <></>
+                    )}
+                </Toolbar>
+            </AppBar>
+
+            <TableContainer component={Paper} sx={{ width: "100%", backgroundColor: "lightcyan" }}>
                 <Table>
                     <TableHead>
                         <TableRow>

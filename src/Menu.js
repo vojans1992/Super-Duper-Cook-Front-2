@@ -72,11 +72,11 @@ const Menu = () => {
 
   return (
     
-    <div className={styles.menu}>
+    <div className={styles.menu} style={{ width: '75%' }}>
       <ul>
-        <li>
+        {/* <li>
           <Link to="/">Home</Link>
-        </li>
+        </li> */}
         {(user !== null) ? <li>
           <Link to="/allergens">Allergens</Link>
         </li> : <></>}

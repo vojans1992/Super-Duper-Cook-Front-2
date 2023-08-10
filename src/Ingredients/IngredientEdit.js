@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText, IconButton } from "@mui/material";
+import { Container, Box, TextField, Typography, Chip, Autocomplete, Stack, Button, FormControl, FormHelperText, IconButton, AppBar, Toolbar } from "@mui/material";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 const InputField = ({
@@ -206,17 +206,22 @@ const IngredientEdit = () => {
     return <div className="ingredient-container">
         <Container maxWidth="sm">
 
-            <Box sx={{ display: "flex", alignItems: "left" }}>
-                <IconButton onClick={() => { navigate('/ingredients') }}>
-                    <ArrowBackRoundedIcon />
-                </IconButton>
-                <Typography variant="h6">Please edit the values of the selected ingredient:</Typography>
-            </Box>
+            <AppBar position="static" color="transparent">
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Edit ingredient
+                    </Typography>
+                    <IconButton onClick={() => { navigate('/ingredients') }}>
+                        <ArrowBackRoundedIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
 
             <Box
                 component="form"
                 sx={{
                     display: "flex",
+                    marginTop: 3,
                     gap: "10px",
                     "flex-direction": "column",
                     "align-items": "center",

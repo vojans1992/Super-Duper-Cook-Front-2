@@ -1,10 +1,12 @@
-import { Box, Container} from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { DataGrid  } from "@mui/x-data-grid";
-import { CardActions, Tooltip, IconButton, Button} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { CardActions, Tooltip, IconButton, Button, AppBar, Toolbar, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { allIcons } from "./Icons";
 import { useState } from "react";
+import { Home } from "@mui/icons-material";
+
 
 
 const ShowAllergens = () => {
@@ -33,7 +35,6 @@ const ShowAllergens = () => {
       headers: {
         //Authorization: user.token,
         "Content-Type": "application/json",
-        "Authorization": JSON.parse(localStorage.getItem('user')).token
       },
     });
 
@@ -48,77 +49,83 @@ const ShowAllergens = () => {
     }
   };
 
-const columns = [
+  const columns = [
 
     { field: "id", headerName: "Id", width: 200 },
     {
-      field: "name", 
-      headerName: "Allergen name", 
-      width: 250, 
+      field: "name",
+      headerName: "Allergen name",
+      width: 250,
       editable: false,
     },
     {
-       field: "icon",
-       headerName: "Allergen icon",
-       width: 250,
-       editable: false,
+      field: "icon",
+      headerName: "Allergen icon",
+      width: 250,
+      editable: false,
     },
     {
-        width: 250, 
-        editable: false,
-        renderCell: (params) => {
+      width: 250,
+      editable: false,
+      renderCell: (params) => {
 
-            return (
-              <CardActions sx={{justifyContent: "center" }}>
-
-          {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Tooltip title="Delete">
-            <IconButton aria-label="delete"  onClick={(e) => deleteAllergen(e, params.row)}>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip> : <></>}
+        return (
+          <CardActions sx={{ justifyContent: "center" }}>
+            <Tooltip title="Delete">
+              <IconButton aria-label="delete" onClick={(e) => deleteAllergen(e, params.row)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </CardActions>
-          
-            )
-          }
+        )
       }
+    }
+  ];
 
-    ];
-  
-  
-    return (
-      <Container>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            height: "100%",
-            width: '100%',
-            margin: 'auto',
-            marginTop: 10,
-          }}
-        >
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            rowHeight={48}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
+
+  return (
+    <Container>
+      <AppBar position="static" color="transparent">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Allergens
+          </Typography>
+          <IconButton onClick={() => { navigate('/') }} color="inherit">   <Home /></IconButton>
+        </Toolbar>
+      </AppBar>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "100%",
+          width: '100%',
+          margin: 'auto',
+          marginTop: 3,
+        }}
+      >
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          rowHeight={48}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
               },
-            }}
-            pageSizeOptions={[5]}
-          />
-        </Box>
+            },
+          }}
+          pageSizeOptions={[5]}
+        />
+      </Box>
 
-        
-        {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Button sx={{color: "black", background: "#dcdcdc", marginTop: "15px"}} variant="contained" onClick={() => navigate("add_new_allergen")}>
-                    {" "}
-                    ADD NEW ALLERGEN{" "}
-                </Button> : <></>}
-      </Container>
-    );
-  };
 
-  export default ShowAllergens;
+      <Button sx={{ color: "black", background: "#dcdcdc", marginTop: "15px" }} variant="contained" onClick={() => navigate("add_new_allergen")}>
+        {" "}
+        ADD NEW ALLERGEN{" "}
+      </Button>
+    </Container>
+  );
+};
+
+export default ShowAllergens;

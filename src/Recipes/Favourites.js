@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Grid, Button, FormControl, TextField } from "@mui/material";
+import { Grid, Button, FormControl, TextField, AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Menu from '../Menu';
 import RecipeReviewCard from './RecipeReviewCard';
 import './Recipe.css';
+import { Home } from "@mui/icons-material";
 
 const ShowRecipes = () => {
   const loadedUser = useLoaderData();
@@ -38,40 +39,60 @@ const ShowRecipes = () => {
     navigate(`/recipes/${recipeId}`); // Navigacija na rutu za prikaz detalja recepta
   };
   return (
-    <>
-      <Menu />
-      <Container className="show-recipes-container container-center">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: 3,
-          }}
-        >
-          <FormControl sx={{ width: "80%", marginBottom: "40px" }}>
+    // <Container className="show-recipes-container container-center">
+    <Container>
+      <AppBar position="static" color="transparent" sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+        <Toolbar>
+          <IconButton onClick={() => { navigate('/') }} color="inherit">
+            <Home />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            My cookbook
+          </Typography>
+          <FormControl sx={{ width: "75%", mr: 2 }}>
             <TextField
               placeholder="Search..."
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              sx={{ flexGrow: 1 }}
+              sx={{ width: "30%", flexGrow: 1 }}
             />
           </FormControl>
-        </Box>
-        <Grid container spacing={3}>
-          {currentRecipes.map((r, index) => (
-            <RecipeReviewCard
-              img={r.imageUrl}
-              key={r.id}
-              recipe={r}
-              //image={getImageForIndex(index)}
-              className="recipe-card"
-              onDelete={() => handleDelete(r.id)} // Dodajemo funkciju za brisanje
-              onLearnMore={() => handleLearnMore(r.id)} // Dodajemo funkciju za prikaz detalja recepta
-            />
-          ))}
-        </Grid>
-      </Container>
-    </>
+        </Toolbar>
+      </AppBar>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "100%",
+          width: '100%',
+          margin: 'auto',
+          marginTop: 3,
+        }}
+      >
+        {/* <FormControl sx={{ width: "100%", marginBottom: "40px" }}>
+          <TextField
+            placeholder="Search..."
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            sx={{ flexGrow: 1 }}
+          />
+        </FormControl> */}
+      </Box>
+      <Grid container spacing={3}>
+        {currentRecipes.map((r, index) => (
+          <RecipeReviewCard
+            img={r.imageUrl}
+            key={r.id}
+            recipe={r}
+            //image={getImageForIndex(index)}
+            className="recipe-card"
+            onDelete={() => handleDelete(r.id)} // Dodajemo funkciju za brisanje
+            onLearnMore={() => handleLearnMore(r.id)} // Dodajemo funkciju za prikaz detalja recepta
+          />
+        ))}
+      </Grid>
+    </Container>
   );
 }
 

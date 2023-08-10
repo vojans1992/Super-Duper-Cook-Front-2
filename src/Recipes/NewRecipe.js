@@ -1,13 +1,14 @@
 import { Option } from "@mui/base";
-import { Box, Container, TextField, FormHelperText, Button, Autocomplete, Stack, FormControl, Chip, Typography, MenuItem, InputLabel, Select, Grid, ListItem, ListItemText, List } from "@mui/material";
+import { Box, Container, TextField, FormHelperText, Button, Autocomplete, AppBar, Toolbar, IconButton,
+    Stack, FormControl, Chip, Typography, MenuItem, InputLabel, Select, Grid, ListItem, ListItemText, List } from "@mui/material";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Menu from '../Menu';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+
 
 const NewRecipe = () => {
-
-
 
     const [title, setTitle] = useState('');
     const [description, setDesription] = useState('');
@@ -31,7 +32,6 @@ const NewRecipe = () => {
 
     const loader_data = useLoaderData();
     const [ingredients, setIngredients] = useState(loader_data[0]);
-
     const navigate = useNavigate();
 
     const save = async () => {
@@ -85,11 +85,23 @@ const NewRecipe = () => {
         setIngredientsAndAmountsForDto((prev) => prev.filter((_, i) => i !== index));
     };
 
-    return <>
-    <Menu/>
+    return (   
         <Container maxWidth="md" sx={{ paddingTop: "15px" }}>
-            <form>
-                <Grid container spacing={2}>
+
+            <AppBar position="static" color="transparent">
+                <Toolbar>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        Add recipe
+                    </Typography>
+                    <IconButton onClick={() => { navigate('/recipes') }}>
+                        <ArrowBackRoundedIcon />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+
+
+
+                <Grid container spacing={2} marginTop={3}>
                     <Grid item xs={12} md={6}>
                         <Box
                             sx={{
@@ -97,6 +109,7 @@ const NewRecipe = () => {
                                 gap: '10px',
                                 flexDirection: 'column',
                                 alignItems: "center",
+                                
                             }}
                         >
                             <TextField
@@ -274,10 +287,9 @@ const NewRecipe = () => {
                         </Button>
                     </Grid>
                 </Grid>
-            </form>
+        
         </Container>
-    </>
-
+    );
 }
 
 export default NewRecipe;

@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Grid, Button, FormControl, TextField } from "@mui/material";
+import { Grid, Button, FormControl, TextField, AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Menu from '../Menu';
 import RecipeReviewCard from './RecipeReviewCard';
 import './Recipe.css';
+import { Home } from "@mui/icons-material";
 
 const ShowRecipes = () => {
   const recipes = useLoaderData();
@@ -37,17 +38,47 @@ const ShowRecipes = () => {
     navigate(`/recipes/${recipeId}`); // Navigacija na rutu za prikaz detalja recepta
   };
   return (
-    <>
-      <Menu />
-      <Container className="show-recipes-container container-center">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: 3,
-          }}
-        >
-          <FormControl sx={{ width: "80%", marginBottom: "40px" }}>
+    // <>
+    //   <Menu />
+    //   <Container className="show-recipes-container container-center">
+
+    //  NOVO
+    <Container>
+      <AppBar position="static" color="transparent" sx={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+        <Toolbar>
+          <IconButton onClick={() => { navigate('/') }} color="inherit">
+            <Home />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Recipes
+          </Typography>
+          <FormControl sx={{ width: "65%", mr: 2 }}>
+            <TextField
+              placeholder="Search..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              sx={{ width: "30%", flexGrow: 1 }}
+            />
+          </FormControl>
+          {(user.role === "ROLE_ADMIN") ? <Button
+            variant="contained"
+            onClick={() =>
+              navigate("new_recipe", { state: { recipes: recipes } })
+            }
+            sx={{ ml: 2 }}> Add new recipe </Button> : <></>}
+        </Toolbar>
+      </AppBar>
+      {/* NOVO */}
+
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 3,
+        }}
+      >
+        {/* <FormControl sx={{ width: "80%", marginBottom: "40px" }}>
             <TextField
               placeholder="Search..."
               value={q}
@@ -67,24 +98,24 @@ const ShowRecipes = () => {
 
             }}
           >
-            Add new recipe
-          </Button> : <></>}
-        </Box>
-        <Grid container spacing={3}>
-          {currentRecipes.map((r, index) => (
-            <RecipeReviewCard
-              img={r.imageUrl}
-              key={r.id}
-              recipe={r}
-              //image={getImageForIndex(index)}
-              className="recipe-card"
-              onDelete={() => handleDelete(r.id)} // Dodajemo funkciju za brisanje
-              onLearnMore={() => handleLearnMore(r.id)} // Dodajemo funkciju za prikaz detalja recepta
-            />
-          ))}
-        </Grid>
-      </Container>
-    </>
+            Add new recipe            
+          </Button> : <></>} */}
+      </Box>
+      <Grid container spacing={3}>
+        {currentRecipes.map((r, index) => (
+          <RecipeReviewCard
+            img={r.imageUrl}
+            key={r.id}
+            recipe={r}
+            //image={getImageForIndex(index)}
+            className="recipe-card"
+            onDelete={() => handleDelete(r.id)} // Dodajemo funkciju za brisanje
+            onLearnMore={() => handleLearnMore(r.id)} // Dodajemo funkciju za prikaz detalja recepta
+          />
+        ))}
+      </Grid>
+    </Container>
+    // </>
   );
 }
 

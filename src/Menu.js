@@ -11,7 +11,13 @@ import './App.css';
 const Menu = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  let user2 = JSON.parse(localStorage.getItem('user'))
+  const [loggedUser, setLoggedUser] = useState({});
+  useEffect(() => {
+    const u = localStorage.getItem("user");
+    if (u) {
+      setLoggedUser(JSON.parse(u));
+    }
+  }, [user])
 
   useEffect(() => {
     let ignore = false;
@@ -52,6 +58,7 @@ const Menu = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    setUser(null)
     navigate('/')
   };
 
@@ -70,19 +77,28 @@ const Menu = () => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
+        {(user !== null) ? <li>
+          <Link to="/allergens">Allergens</Link>
+        </li> : <></>}
+        {(user !== null) ? <li>
+          <Link to="/myallergens">My allergens</Link>
+        </li> : <></>}
+        {(user !== null) ? <li>
           <Link to="/ingredients">Ingredients</Link>
-        </li>
+        </li> : <></>}
         <li>
           <Link to="/recipes">Recipes</Link>
         </li>
-        <li>
+        {(user !== null) ? <li>
+          <Link to="/recipes/mycook">My cookbook</Link>
+        </li> : <></>}
+        {(user !== null) ? <li>
           <Link to="/users">Users</Link>
-        </li>
+        </li> : <></>}
         <li>
-          {user2 ? (
+          {(user !== null) ? (
             <div className="textMenu">
-              {`Hello, ${user2.user}`}
+              {`Hello, ${loggedUser.user}`}
               <ColorButton variant="outlined" onClick={handleLogout}>
                 Logout
               </ColorButton>

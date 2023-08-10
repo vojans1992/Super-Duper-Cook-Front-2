@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -18,6 +18,15 @@ const FavoriteButton = styled(Button)({
 });
 
 const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
+
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const u = localStorage.getItem("user");
+    if (u) {
+      setUser(JSON.parse(u));
+    }
+  }, [])
+
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/v1/recipes/${recipe.id}`, {
@@ -118,7 +127,7 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        {((JSON.parse(localStorage.getItem('user')).role) === "ROLE_ADMIN") ? <Button size="small" onClick={handleDelete}>Delete</Button> : <></>}
+        {((user.role) === "ROLE_ADMIN") ? <Button size="small" onClick={handleDelete}>Delete</Button> : <></>}
         <Button size="small" onClick={handleLearnMore}>Learn More</Button>
         <FavoriteButton
           size="small"

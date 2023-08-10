@@ -8,7 +8,6 @@ import { Delete, Edit } from "@mui/icons-material";
 
 
 const ShowUser = (user, onDelete) => {
-    console.log(user.user)
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
     //  const [user, setUser] = useState(null);
@@ -22,7 +21,7 @@ const ShowUser = (user, onDelete) => {
     }
     const deleteUser = async () => {
 
-        let response = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
+        let response = await fetch(`http://localhost:8080/api/v1/users/${user.user.id}`, {
             method: "DELETE",
             mode: 'cors',
             headers: {
@@ -34,9 +33,8 @@ const ShowUser = (user, onDelete) => {
         });
 
         if (response.ok) {
-            let d = await response;
+            let d =  response;
             console.log("you have successfully deleted the user");
-            onDelete(user.id);
             alert("You have successfully deleted the user");
             navigate("/users");
         } else {
@@ -71,10 +69,10 @@ const ShowUser = (user, onDelete) => {
                             {user.user.username}
                         </Grid>
                         <Grid item xs={6} >
-                            Password:
+                            Role:
                         </Grid>
                         <Grid item xs={6}>
-                            {user.user.password}
+                            {user.user.role.name}
                         </Grid>
                     </Grid>
                 </CardContent>
@@ -82,7 +80,7 @@ const ShowUser = (user, onDelete) => {
                     <Stack direction="row" spacing={2}>
                         <Tooltip title="Edit">
                             <IconButton onClick={e => {
-                                navigate(`/users/${user.id}`);
+                                navigate(`/users/${user.id}`, {state: {user: user.user}});
                             }}>
                                 <Edit />
                             </IconButton>

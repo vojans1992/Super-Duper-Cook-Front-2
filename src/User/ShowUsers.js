@@ -10,7 +10,6 @@ const ShowUsers = () => {
  //   const[search, setSearch] = useState ('');
     const allUsers = useLoaderData();
     const [users, setUsers] = useState(allUsers);
-    console.log(users);
 
     const navigate = useNavigate();
 
@@ -51,7 +50,7 @@ const ShowUsers = () => {
                         }}
                     />
 
-                    <Button variant="outlined" onClick={() => { navigate('/users/new_user') }}>Add New </Button>
+                    {JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN" ? <Button variant="outlined" onClick={() => { navigate('/users/new_cook') }}>Add New Cook </Button> : <></>}
 
                 </Stack>
 

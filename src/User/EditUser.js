@@ -6,26 +6,24 @@ import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 const EditUser = () => {
 
     const navigate = useNavigate();
-    const user = useLoaderData();
+    const location = useLocation();
+    const user = location.state.user;
     const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState(user.password);
-    const [role, setRole] = useState(user.role);
     const [globalError, setGlobalError] = useState(false);
     const errorMessageTemplate = "Please fill ";
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
-    const [roleError, setRoleError] = useState("");
 
 
     const update = async () => {
-        if (username == "" || password == "" || role == "") {
+        if (username == "" || password == "") {
             setGlobalError("Please fill in the blanks.");
             return;
         }
         const new_user = {
             username: username,
-            password: password,
-            role: role
+            password: password
         };
         let response = await fetch(`http://localhost:8080/api/v1/users/${user.id}`, {
             method: "PUT",
@@ -85,9 +83,10 @@ const EditUser = () => {
                     sx={{ width: "100px" }}
                     fullWidth
                     required
+                    type="password"
                     id="outlined-password-input"
-                    label="Password:"
-                    value={password}
+                    label="New password:"
+                    //value={password}
                     error={passwordError}
                     helperText={passwordError}
                     onChange={(e) => {
@@ -100,29 +99,10 @@ const EditUser = () => {
                         else setPasswordError("");
                     }}
                 />
-                <TextField
-                    sx={{ width: "100px" }}
-                    fullWidth
-                    required
-                    id="outlined-role-input"
-                    label="Role:"
-                    value={role}
-                    error={roleError}
-                    helperText={roleError}
-                    onChange={(e) => {
-                        setRole(e.target.value);
-                        if (e.target.value === "")
-                            setRoleError(
-                                errorMessageTemplate +
-                                "correct role"
-                            );
-                        else setRoleError("");
-                    }}
-                />
                 <Button variant="contained"
                     onClick={update}
                     disabled={
-                        usernameError || passwordError || roleError
+                        usernameError || passwordError
                     }
                 >
                     {" "}

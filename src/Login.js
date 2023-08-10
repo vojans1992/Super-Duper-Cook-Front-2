@@ -80,7 +80,9 @@ const Login = () => {
       </ColorButton>
    
       <div className="textLogin">
-          Don't have an account? <Link href="/signup">Sign Up</Link>          
+          Don't have an account? <Button 
+          onClick={ () => {navigate("/users/new_user")}}
+          >Sign Up</Button>          
         </div>  
     </div>
   );

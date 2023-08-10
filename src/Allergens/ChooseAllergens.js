@@ -15,6 +15,7 @@ export default function ChooseAllergens() {
     const handleToggle = (value) => () => {
 
         const currentIndex = selectedAllergens.indexOf(value);
+        console.log(currentIndex)
         const newChecked = [...selectedAllergens];
 
         if (currentIndex === -1) {
@@ -40,8 +41,8 @@ export default function ChooseAllergens() {
     const handleClick = async () => {
 
         console.log("za slanje " + JSON.stringify(selectedAllergens));
-
-        const result = await fetch("http://localhost:8080/api/v1/users/19/allergens", {
+        let username = JSON.parse(localStorage.getItem('user')).user
+        const result = await fetch(`http://localhost:8080/api/v1/users/${username}/allergens`, {
 
         method: "POST",
         //mode : "cors",
@@ -49,6 +50,7 @@ export default function ChooseAllergens() {
           headers: { 
             Accept:"application/json",
             "Content-Type": "application/json",
+            "Authorization" : JSON.parse(localStorage.getItem('user')).token
           },
         body: JSON.stringify(selectedAllergens),
 

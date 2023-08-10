@@ -27,7 +27,7 @@ const UserForm = () => {
             password: password
         };
 
-        let response = await fetch("http://localhost:8080/api/v1/users", {
+        let response = await fetch("http://localhost:8080/api/v1/cook", {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -107,7 +107,7 @@ const UserForm = () => {
 
             >
                 {" "}
-                Add new user{" "}
+                Add new cook{" "}
             </Button>
             <FormHelperText error={globalError}>{globalError}</FormHelperText>
         </Box>

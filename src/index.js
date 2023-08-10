@@ -18,6 +18,8 @@ import RecipeDetails from './Recipes/RecipeDetails';
 import ChooseAllergens from './Allergens/ChooseAllergens';
 import AddNewAllergen from './Allergens/AddNewAllergen';
 import ShowAllergens from './Allergens/ShowAllergens';
+import NewCook from './User/NewCook'
+import Favourites from './Recipes/Favourites'
 
 
 const ErrorDisplay = ({ entity }) => {
@@ -43,12 +45,11 @@ const ErrorDisplay = ({ entity }) => {
 const API_BASE_URL = 'http://localhost:8080/api/v1';
 
 const withAuthorization = (headers = {}) => {
-  const token = JSON.parse(localStorage.getItem('user')).token;
   return {
     ...headers,
     'Content-Type': 'application/json',
-    Authorization: token,
-    Accept: 'application/json'
+    Accept: 'application/json',
+    "Authorization" : JSON.parse(localStorage.getItem('user')).token
   };
 };
 
@@ -95,6 +96,22 @@ const router = createBrowserRouter([
     loader: loadRecipes
   },
   {
+    path: "recipes/mycook",
+    element: <Favourites/>,
+    loader: async () => {
+      const user_r = await fetch(`http://localhost:8080/api/v1/users/${JSON.parse(localStorage.getItem('user')).user}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': JSON.parse(localStorage.getItem('user')).token
+        }
+      });
+      const user = await user_r.json();
+      return user;
+    }
+  },
+  {
     path: "recipes/new_recipe",
     element: <NewRecipe />,
     loader: async () => {
@@ -118,23 +135,19 @@ const router = createBrowserRouter([
   {
     path: "users",
     element: <ShowUsers />,
-    loader: async () => {
-      return fetch("http://localhost:8080/api/v1/users");
-    }
+    loader: loadUsers
   },
   {
     path: "users/new_user",
     element: <UserForm />
   },
   {
+    path: "users/new_cook",
+    element: <NewCook />
+  },
+  {
     path: "users/:id",
-    element: <EditUser />,
-    loader: async ({ params }) => {
-      return fetch(`http://localhost:8080/api/v1/users/${params.id}`), {
-        method: 'GET',
-        mode: 'cors'
-      }
-    }
+    element: <EditUser />
   },
   {
     path: 'ingredients',
@@ -210,7 +223,6 @@ const router = createBrowserRouter([
         });
       } else if (request.method === 'PUT') {
         let data = Object.fromEntries(await request.formData());
-        console.log(JSON.stringify(data, null, 4));
         return fetch(`${API_BASE_URL}/ingredients/${params.id}`, {
           method: 'PUT',
           mode: 'cors',
@@ -272,7 +284,6 @@ const router = createBrowserRouter([
       } else if (request.method === 'PUT') {
         let data = Object.fromEntries(await request.formData());
         data.users = JSON.parse(data.users);
-        console.log(JSON.stringify(data, null, 4));
         return fetch(`http://localhost:8080/api/v1/users/${params.id}`, {
           method: 'PUT',
           mode: 'cors',

@@ -9,7 +9,8 @@ import RecipeReviewCard from './RecipeReviewCard';
 import './Recipe.css';
 
 const ShowRecipes = () => {
-  const recipes = useLoaderData();
+  const loadedUser = useLoaderData();
+  const recipes = loadedUser.recipes;
   const navigate = useNavigate();
   const [currentRecipes, setCurrentRecipes] = useState(recipes);
   const [q, setQ] = useState("");
@@ -55,20 +56,6 @@ const ShowRecipes = () => {
               sx={{ flexGrow: 1 }}
             />
           </FormControl>
-          {(user.role === "ROLE_ADMIN") ? <Button
-            variant="outlined"
-            onClick={() =>
-              navigate("new_recipe", { state: { recipes: recipes } })
-            }
-            sx={{
-              width: "160px",// Prilagodite širinu sadržaju
-              height: "70px", //Prilagodite visinu
-              color: "black",
-
-            }}
-          >
-            Add new recipe
-          </Button> : <></>}
         </Box>
         <Grid container spacing={3}>
           {currentRecipes.map((r, index) => (

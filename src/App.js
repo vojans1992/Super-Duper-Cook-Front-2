@@ -6,7 +6,7 @@ import Menu from './Menu'
 
 
 function App()  {
-  localStorage.setItem('user')
+  // localStorage.setItem('user')
   return (
     <div className="home-background"> {/* Primena klase za pozadinu */}
       <div className="header">
@@ -23,9 +23,6 @@ function App()  {
         <p>Welcome to our oasis of flavor! Indulge in irresistible dishes<br/> that will take you on a culinary journey like no other.<br/>
           Experience the harmony of taste and aroma in every bite.<br/>
           Step into our magical culinary adventure</p>
-      </div>
-      <div className="button-container">
-        <button className="menu-button">View Our Menu</button>
       </div>
       
     </div>

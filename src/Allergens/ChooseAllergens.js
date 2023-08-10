@@ -29,6 +29,7 @@ export default function ChooseAllergens() {
 
     const getIconByName = (name) => {
 
+      
       var result = allIcons.filter( item => {
         return item.name === name
       })

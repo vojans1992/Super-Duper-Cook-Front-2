@@ -28,11 +28,12 @@ const ShowAllergens = () => {
 
     console.log("za brisanje " + params.id);
 
-    let response = await fetch(`http://localhost:8080/api/v1/allergens/${params.id}`, {
+    let response = await fetch(`http://localhost:8080/api/v1/allergen/${params.id}`, {
       method: "DELETE",
       headers: {
         //Authorization: user.token,
         "Content-Type": "application/json",
+        "Authorization": JSON.parse(localStorage.getItem('user')).token
       },
     });
 
@@ -70,11 +71,11 @@ const columns = [
             return (
               <CardActions sx={{justifyContent: "center" }}>
 
-          <Tooltip title="Delete">
+          {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Tooltip title="Delete">
             <IconButton aria-label="delete"  onClick={(e) => deleteAllergen(e, params.row)}>
               <DeleteIcon />
             </IconButton>
-          </Tooltip> 
+          </Tooltip> : <></>}
           </CardActions>
           
             )
@@ -112,10 +113,10 @@ const columns = [
         </Box>
 
         
-        <Button sx={{color: "black", background: "#dcdcdc", marginTop: "15px"}} variant="contained" onClick={() => navigate("add_new_allergen")}>
+        {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Button sx={{color: "black", background: "#dcdcdc", marginTop: "15px"}} variant="contained" onClick={() => navigate("add_new_allergen")}>
                     {" "}
                     ADD NEW ALLERGEN{" "}
-                </Button>
+                </Button> : <></>}
       </Container>
     );
   };

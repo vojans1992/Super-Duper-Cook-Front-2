@@ -42,13 +42,14 @@ import {
         icon: selectedIcon
       };
 
-      const result = await fetch("http://localhost:8080/api/v1/allergens", {
+      const result = await fetch("http://localhost:8080/api/v1/allergen", {
         method: "POST",
         mode : "cors",
         credentials: "same-origin",
           headers: {
             Accept:"application/json",
             "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token
           },
         body: JSON.stringify(new_allergen),
       });
@@ -81,7 +82,7 @@ import {
         >
           
           <TextField
-            sx={{ width: "100%", input: { color: 'white' }}}
+            sx={{ width: "100%"}}
             fullWidth
             required
             label="Allergen name"

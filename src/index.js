@@ -290,10 +290,11 @@ const router = createBrowserRouter([
     element: <ChooseAllergens />,
     loader:
       async () => {
-        return await fetch('http://localhost:8080/api/v1/allergens', {
+        return await fetch('http://localhost:8080/api/v1/allergen', {
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token
           }
         });
 
@@ -305,13 +306,14 @@ const router = createBrowserRouter([
   },
   {
     path: '/allergens',
-    element: <ShowAllergens></ShowAllergens>,
+    element: <ShowAllergens/>,
     loader:
       async () => {
-        return await fetch('http://localhost:8080/api/v1/allergens', {
+        return await fetch('http://localhost:8080/api/v1/allergen', {
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": JSON.parse(localStorage.getItem('user')).token
           }
         });
 

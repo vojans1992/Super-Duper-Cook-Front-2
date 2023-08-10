@@ -44,7 +44,7 @@ const ShowIngredients = () => {
                 </FormControl>
                 </Box>
 
-                <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button>
+                {(JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN") ? <Button variant="contained" onClick={() => { navigation('new_ingredient') }}>Add New Ingredient</Button> : <></>}
             </Box>
             <TableContainer component={Paper}  sx={{ width: "100%", backgroundColor: "lightcyan" }}>
                 <Table>

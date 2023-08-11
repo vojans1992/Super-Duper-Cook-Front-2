@@ -10,7 +10,14 @@ import './Recipe.css';
 import { Home } from "@mui/icons-material";
 
 const ShowRecipes = () => {
-  const recipes = useLoaderData();
+  const recipes = useLoaderData()[0];
+  const loggedUser = useLoaderData()[1];
+  const recipeIngredientRatios = useLoaderData()[2];
+  console.log(loggedUser)
+  const loggedUserRecipes = loggedUser.recipes;
+  const loggedUserAllergens = loggedUser.allergens;
+  console.log(loggedUserAllergens)
+
   const navigate = useNavigate();
   const [currentRecipes, setCurrentRecipes] = useState(recipes);
   const [q, setQ] = useState("");
@@ -37,6 +44,33 @@ const ShowRecipes = () => {
   const handleLearnMore = (recipeId) => {
     navigate(`/recipes/${recipeId}`); // Navigacija na rutu za prikaz detalja recepta
   };
+
+  const checkIfContainsAllergens = (recipe) => {
+    let containedAllergens = [];
+    recipeIngredientRatios.forEach(element => {
+      if (element.recipe.id === recipe.id) {
+        element.ingredient.allergens.forEach(allergen => {
+          console.log(loggedUserAllergens)
+          if (loggedUserAllergens.some(obj => obj.id === allergen.id)) {
+            containedAllergens.push(allergen)
+          }
+        });
+      }
+    })
+    return containedAllergens;
+  }
+
+  const checkIfFav = (recipe) => {
+    let isFav = false;
+    if(loggedUser === null) return isFav;
+    console.log(loggedUser)
+    loggedUserRecipes.forEach(element => {
+      if (element.id === recipe.id) {
+        isFav = true;
+      }
+    });
+    return isFav;
+  }
   return (
     // <>
     //   <Menu />
@@ -60,7 +94,7 @@ const ShowRecipes = () => {
               sx={{ width: "30%", flexGrow: 1 }}
             />
           </FormControl>
-          {(user.role === "ROLE_ADMIN") ? <Button
+          {(user.role === "ROLE_COOK") ? <Button
             variant="contained"
             onClick={() =>
               navigate("new_recipe", { state: { recipes: recipes } })
@@ -104,6 +138,8 @@ const ShowRecipes = () => {
       <Grid container spacing={3}>
         {currentRecipes.map((r, index) => (
           <RecipeReviewCard
+            allergens={checkIfContainsAllergens(r)}
+            isFav={checkIfFav(r)}
             img={r.imageUrl}
             key={r.id}
             recipe={r}

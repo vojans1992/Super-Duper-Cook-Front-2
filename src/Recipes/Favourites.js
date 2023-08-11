@@ -10,8 +10,15 @@ import './Recipe.css';
 import { Home } from "@mui/icons-material";
 
 const ShowRecipes = () => {
-  const loadedUser = useLoaderData();
+  const loadedUser = useLoaderData()[1];
   const recipes = loadedUser.recipes;
+  const recipeIngredientRatios = useLoaderData()[2];
+  let loggedUserRecipes = null;
+  let loggedUserAllergens = null;
+  if (localStorage.getItem('user') !== null) {
+    loggedUserRecipes = loadedUser.recipes;
+    loggedUserAllergens = loadedUser.allergens;
+  }
   const navigate = useNavigate();
   const [currentRecipes, setCurrentRecipes] = useState(recipes);
   const [q, setQ] = useState("");
@@ -38,6 +45,23 @@ const ShowRecipes = () => {
   const handleLearnMore = (recipeId) => {
     navigate(`/recipes/${recipeId}`); // Navigacija na rutu za prikaz detalja recepta
   };
+
+  const checkIfContainsAllergens = (recipe) => {
+    let containedAllergens = [];
+    if (loadedUser === null) return containedAllergens;
+    recipeIngredientRatios.forEach(element => {
+      if (element.recipe.id === recipe.id) {
+        element.ingredient.allergens.forEach(allergen => {
+          if (loggedUserAllergens.some(obj => obj.id === allergen.id)) {
+            containedAllergens.push(allergen)
+          }
+        });
+      }
+    })
+    return containedAllergens;
+  }
+
+
   return (
     // <Container className="show-recipes-container container-center">
     <Container>
@@ -82,6 +106,8 @@ const ShowRecipes = () => {
       <Grid container spacing={3}>
         {currentRecipes.map((r, index) => (
           <RecipeReviewCard
+            allergens={checkIfContainsAllergens(r)}
+            isFav={true}
             img={r.imageUrl}
             key={r.id}
             recipe={r}

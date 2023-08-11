@@ -78,19 +78,19 @@ const ShowUser = (user, onDelete) => {
                 </CardContent>
                 <CardActions sx={{ display: "flex", justifyContent: "center" }}>
                     <Stack direction="row" spacing={2}>
-                        <Tooltip title="Edit">
+                    {JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN" ? <Tooltip title="Edit">
                             <IconButton onClick={e => {
                                 navigate(`/users/${user.id}`, {state: {user: user.user}});
                             }}>
                                 <Edit />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> : <></>} 
 
-                        <Tooltip title="Delete">
+                        {JSON.parse(localStorage.getItem('user')).role === "ROLE_ADMIN" ? <Tooltip title="Delete">
                             <IconButton aria-label="delete" onClick={deleteUser}>
                                 <Delete />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip> : <></>} 
 
 
                     </Stack>

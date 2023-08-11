@@ -31,7 +31,7 @@ const UserForm = () => {
             mode: 'cors',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": JSON.parse(localStorage.getItem('user')).token,
+                // "Authorization": JSON.parse(localStorage.getItem('user')).token,
                 "Accept": "application/json"
             },
             body: JSON.stringify(new_user),

@@ -17,7 +17,7 @@ const FavoriteButton = styled(Button)({
   },
 });
 
-const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
+const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore, isFav, allergens }) => {
 
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -53,7 +53,7 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
     onLearnMore(recipe.id);
   };
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(isFav);
 
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
@@ -124,6 +124,9 @@ const RecipeReviewCard = ({ recipe, img, onDelete, onLearnMore }) => {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {recipe.description}
+        </Typography>
+        <Typography variant="body2" color="red">
+          {allergens.map((a) => (a.name) + " ")}
         </Typography>
       </CardContent>
       <CardActions>

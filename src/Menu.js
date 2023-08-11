@@ -21,29 +21,29 @@ const Menu = () => {
 
   useEffect(() => {
     let ignore = false;
-    
+
     const fetchUserData = async () => {
       try {
         const userItem = localStorage.getItem('user');
         if (!userItem) {
           // Handle the case where 'user' item is not set
           console.log("User data not found in localStorage");
-          return;
-        }
-        const token = JSON.parse(localStorage.getItem('user')).token;
-        const response = await fetch(`http://localhost:8080/api/v1/users`, {
-          method: 'GET',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: token,
-            Accept: 'application/json',
-          },
-        });
+        } else {
+          const token = JSON.parse(localStorage.getItem('user')).token;
+          const response = await fetch(`http://localhost:8080/api/v1/users/${JSON.parse(localStorage.getItem('user')).user}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: token,
+              Accept: 'application/json',
+            },
+          });
 
-        if (!ignore && response.ok) {
-          const userData = await response.json();
-          setUser(userData);
+          if (!ignore && response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+          }
         }
       } catch (error) {
         console.error('An error occurred while fetching user data:', error);
@@ -71,7 +71,7 @@ const Menu = () => {
   }));
 
   return (
-    
+
     <div className={styles.menu} style={{ width: '75%' }}>
       <ul>
         {/* <li>

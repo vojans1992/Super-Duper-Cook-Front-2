@@ -53,9 +53,9 @@ const RecipeDetails = () => {
           <Typography variant="h6" style={headingStyle}>
             {recipe.description}
           </Typography>
-          <Typography variant="body1" style={attributeStyle}>
+          {/* <Typography variant="body1" style={attributeStyle}>
             <strong>Autor:</strong> {recipe.author.username}
-          </Typography>
+          </Typography> */}
           <Typography variant="body1" style={attributeStyle}>
             <strong>Vreme pripreme:</strong> {recipe.preparationTime} minuta
           </Typography>

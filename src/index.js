@@ -49,7 +49,7 @@ const withAuthorization = (headers = {}) => {
     ...headers,
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    "Authorization" : JSON.parse(localStorage.getItem('user')).token
+    "Authorization": JSON.parse(localStorage.getItem('user')).token
   };
 };
 
@@ -78,11 +78,23 @@ const loadUsers = async () => {
 };
 
 const loadRecipes = async () => {
-  const response = await fetch(`${API_BASE_URL}/recipes`, {
+  const recipes_r = await fetch(`${API_BASE_URL}/recipes`, {
     method: 'GET',
     headers: withAuthorization()
   });
-  return response;
+  const recipes = await recipes_r.json()
+  const loggedUser_r = await fetch(`${API_BASE_URL}/users/${JSON.parse(localStorage.getItem('user')).user}`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  const loggedUser = await loggedUser_r.json();
+
+  const recipeIngredientRatios_r = await fetch(`${API_BASE_URL}/ratios`, {
+    method: 'GET',
+    headers: withAuthorization()
+  });
+  const recipeIngredientRatios = await recipeIngredientRatios_r.json();
+  return [recipes, loggedUser, recipeIngredientRatios];
 };
 
 const router = createBrowserRouter([
@@ -97,19 +109,20 @@ const router = createBrowserRouter([
   },
   {
     path: "recipes/mycook",
-    element: <Favourites/>,
-    loader: async () => {
-      const user_r = await fetch(`http://localhost:8080/api/v1/users/${JSON.parse(localStorage.getItem('user')).user}`, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': JSON.parse(localStorage.getItem('user')).token
-        }
-      });
-      const user = await user_r.json();
-      return user;
-    }
+    element: <Favourites />,
+    loader: loadRecipes
+    // loader: async () => {
+    //   const user_r = await fetch(`http://localhost:8080/api/v1/users/${JSON.parse(localStorage.getItem('user')).user}`, {
+    //     method: 'GET',
+    //     mode: 'cors',
+    //     headers: {
+    //       'Content-type': 'application/json',
+    //       'Authorization': JSON.parse(localStorage.getItem('user')).token
+    //     }
+    //   });
+    //   const user = await user_r.json();
+    //   return user;
+    // }
   },
   {
     path: "recipes/new_recipe",
@@ -317,7 +330,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/allergens',
-    element: <ShowAllergens/>,
+    element: <ShowAllergens />,
     loader:
       async () => {
         return await fetch('http://localhost:8080/api/v1/allergen', {

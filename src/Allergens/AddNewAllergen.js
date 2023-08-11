@@ -54,6 +54,7 @@ const AddNewAllergen = () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "Authorization": JSON.parse(localStorage.getItem('user')).token
       },
       body: JSON.stringify(new_allergen),
     });
